@@ -1,0 +1,7 @@
+"0","student_scores <- read.csv(here(""Data"", ""Student Scores.csv""),
+                           header = FALSE,
+                           sep = "","")
+"
+"2","Error in here(""Data"", ""Student Scores.csv"") : 
+  could not find function ""here""
+"

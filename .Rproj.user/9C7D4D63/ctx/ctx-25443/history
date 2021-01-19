@@ -1,0 +1,141 @@
+mode (2)
+Class(2)
+Class (2)
+class(2)
+typeof(2)
+even_nums <- c(2, 4, 6, 8, 10, 12, 14, 16)
+class(even_nums)
+class(true_or_false)
+class(true_or_false)
+class(true_or_false)
+typeof(true_or_false)
+true_or_false <- c(TRUE, TRUE, FALSE, TRUE, FALSE)
+class(true_or_false)
+typeof(true_or_false)
+even_nums_2 <- c(2L, 4L, 6L, 8L, 10L, 12L, 14L, 16L)
+class(even_nums_2)
+typeof(even_nums_2)
+our_course <- c("E", "D", "R", "M", "7", "1", "8")
+class(our_course)
+typeof(our_course)
+our_course_2 <- c("EDRM", "718")
+class(our_course_2)
+typeof(our_course_2)
+logic_to_numeric <- as.numeric(true_or_false)
+logic_to_numeric
+numeric_to_character <- as.character(even_nums)
+even_nums
+numeric_to_logical <- as.logical(even_nums)
+numeric_to_logical
+comment(even_nums) <- c("A list of even numbers", "Created 17 Jan 2021")
+attributes(even_nums)
+names(even_nums) <- c("two", "four", "six", "eight", "ten", "twelve",
+"fourteen", "sixteen")
+even_nums
+odd_nums <- c("one" = 1, "three" = 3, "five" = 5, "seven" = 7)
+odd_nums
+odd_nums
+class(odd_nums)
+attr(even_nums, "category") <- "even numbers"
+attributes(even_nums)
+student_scores <- c( 1,  2,  3,  4,
+47, 51, 55, 45,
+41, 52, 52, 57)
+dim(student_scores) <- c(4, 3)
+student_scores
+student_scores <- matrix( c( 1, 47, 41,
+2, 51, 52,
+3, 55, 52,
+4, 45, 57),
+nrow = 4,
+ncol = 3,
+byrow = TRUE)
+student_scores
+class(student_scores)
+attributes(student_scores)
+typeof(student_scores)
+is.numeric(student_scores)
+is.matrix(student_scores)
+length(student_scores)
+rownames(student_scores) <- c("A", "B", "C", "D")
+colnames(student_scores) <- c("ID", "math", "reading")
+student_scores
+rownames(student_scores) <- NULL
+student_scores
+student_scores <- read.csv(here("Data", "Student Scores.csv"),
+header = FALSE,
+sep = ",")
+student_scores <- read.csv(here("Data", "Student Scores.csv"),
+header = FALSE,
+sep = ",")
+student_scores <- read.csv(here("Data", "Student Scores.csv"),
+header = FALSE,
+sep = ",")
+library(readr)
+Student_Scores <- read_csv("Data/Student Scores.csv")
+View(Student_Scores)
+student_scores <- read.csv(here("Data", "Student Scores.csv"),
+header = FALSE,
+sep = ",")
+student_scores <- read.csv(here ("Data", "Student Scores.csv"),
+header = FALSE,
+sep = ",")
+student_scores <- read.csv(here("Data", "Student Scores.csv"),
+header = FALSE,
+sep = ",")
+View(student_scores)
+student_scores <- read.csv(here ("Data", "Student Scores.csv"),
+header = FALSE,
+sep = ",")
+# There are multiple ways to create a matrix_ One way is to give two
+# dimensions to a vector.
+student_scores <- c( 1,  2,  3,  4,
+47, 51, 55, 45,
+41, 52, 52, 57)
+dim(student_scores) <- c(4, 3)
+student_scores
+# Another way is to use the matrix function.
+student_scores <- matrix( c( 1,  2,  3,  4,
+47, 51, 55, 45,
+41, 52, 52, 57),
+nrow = 4,
+ncol = 3 )
+student_scores
+# Notice that the default is to enter elements in columns. We can change
+# that to enter elements in rows.
+student_scores <- matrix( c( 1, 47, 41,
+2, 51, 52,
+3, 55, 52,
+4, 45, 57),
+nrow = 4,
+ncol = 3,
+byrow = TRUE)
+student_scores
+# Let's look at the class and other attributes of a matrix.
+class(student_scores)
+attributes(student_scores)
+typeof(student_scores)
+is.numeric(student_scores)
+is.matrix(student_scores)
+length(student_scores)
+# We can add names to one or more dimensions.
+rownames(student_scores) <- c("A", "B", "C", "D")
+colnames(student_scores) <- c("ID", "math", "reading")
+student_scores
+comment(student_scores) <- c("data from 3rd grade study",
+"collected on 15 Nov 2018")
+attributes(student_scores)
+# If we decide the names don't add much, we can remove them.
+rownames(student_scores) <- NULL
+student_scores
+# You can read from a text or csv file and then convert to a matrix.
+student_scores <- read.csv(here ("Data", "Student Scores.csv"),
+header = FALSE,
+sep = ",")
+student_scores <- read.csv(here ("Student Scores.csv"),
+header = FALSE,
+sep = ",")
+student_scores <- read.csv(here ("Data", "Student Scores.csv"),
+header = FALSE,
+sep = ",")
+library(here)
