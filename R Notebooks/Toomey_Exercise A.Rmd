@@ -1,0 +1,188 @@
+---
+title: "Exercise A"
+author: Mitchell Toomey
+date: 1/21/21
+output: html_notebook
+---
+
+### 1
+```{r}
+distance <- c(2,2,5,9,5,70)
+```
+
+### 2
+```{r}
+class(distance)
+```
+### 3
+```{r}
+names(distance) <- c("Olivia", "Asiye", "Charlie", "Hazza", "Shelby", "Mitchell")
+```
+
+### 4
+```{r}
+logical_distance <- as.logical(distance)
+```
+
+### 5
+#I got all TRUE statements because all the numbers are above zero
+
+### 6
+#I would use the attribute function. 
+
+### 7
+```{r}
+attr(distance, "emails") <-c ("ademir@email.sc.edu","ojlewis@email.sc.edu", "gonzalsk@email.sc.edu" ,"binhazza@email.sc.edu", "tt12@email.sc.edu", "walterc5@email.sc.edu")
+```
+
+### 8
+```{r}
+names(distance)
+class(distance)
+attributes(distance)
+dim(distance)
+```
+
+### 9
+```{r}
+correlation_matrix <- matrix( c( 1.0,  0.378,  -0.093,  0.378,
+                            1.0, 0.588, -0.093, 0.588,
+                            1.0),
+                          nrow = 3,
+                          ncol = 3 )
+```
+
+### 10
+```{r}
+rownames(correlation_matrix) <- c("IQ", "Brain Size", "Height")
+colnames(correlation_matrix) <- c("ID", "Brain Size", "Height")
+
+correlation_matrix
+```
+
+### 11
+```{r}
+restaurant_info <- list("Sconyers", "Augusta, GA", "9am-9pm", "BBQ", "no acohol", "$7-$20")
+
+names(restaurant_info) <- c("Restaurant Name", "City", "Open Hours",
+                        "Type of Cuisine", "Acohol?", "Entree Price Range")
+```
+
+### 12
+```{r}
+comment(restaurant_info) <- c("Sconyer's BBQ is a lovely staple to the city of Augusta. Everytime I go there, I feel right at home!")
+```
+
+### 13
+```{r}
+distance > 5
+
+# There are only 2 people on my list who live more than 5 miles from campus. 
+
+distance_greater_5 <- c(9, 70)
+sum(distance_greater_5)
+
+# Everyone on my list's total miles from campus is 93 miles. 
+```
+
+### 14
+```{r}
+distance > 10
+
+# One student on my list lives more than 10 miles from the University.
+```
+
+### 15
+```{r}
+Student_Data <- Mount_Holly_Elementary_Data_1_
+
+Student_Data
+```
+
+### 16
+```{r}
+typeof(Student_Data)
+
+#The data are stored in a list. 
+```
+
+### 17
+```{r}
+class(Student_Data$`First Name`)
+class(Student_Data$`Last Name`)
+class(Student_Data$Gender)
+class(Student_Data$Grade)
+class(Student_Data$Score)
+```
+
+###18
+```{r}
+grade_factor <- factor(Student_Data$Grade)
+grade_factor
+```
+
+### 19
+```{r}
+levels(grade_factor)
+```
+
+### 20
+```{r}
+x = Student_Data$Gender
+y = Student_Data$Score
+
+t.test(Student_Data$Score ~ Student_Data$Gender)
+
+#The 95 % confidence interval is between -2.174 and 3.454
+
+t_result <- c(t.test(Student_Data$Score ~ Student_Data$Gender))
+```
+
+### 21
+```{r}
+attributes(t_result)
+```
+
+### 22
+```{r}
+class(t_result)
+```
+
+### 23
+```{r}
+factor(Student_Data$Grade)
+
+length(which(Student_Data$Grade == 4))
+
+# 74 students are in grade 4.
+```
+
+### 24
+```{r}
+# Creating z-scores for the student scores and binding them to the overall spreadsheet.
+
+mean(Student_Data$Score)
+
+sd(Student_Data$Score)
+
+z_scores <- (Student_Data$Score-mean(Student_Data$Score))/sd(Student_Data$Score)
+
+z_scores
+
+cbind(Student_Data, z_scores)
+```
+
+### 25
+```{r}
+# Number of z-scores that are positive
+
+length(which(z_scores > 0))
+```
+
+### 26
+```{r}
+is.element("Trevor", Student_Data$`First Name`)
+
+# There is at least one Trevor in the school 
+```
+

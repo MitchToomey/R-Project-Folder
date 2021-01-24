@@ -1,0 +1,4 @@
+"0","restaurant_info <- list(""Sconyers"", ""Augusta, GA"", ""9am-9pm"", ""BBQ"", ""no acohol"", ""$7-$20"")"
+"0",""
+"0","names(restaurant_info) <- c(""Restaurant Name"", ""City"", ""Open Hours"","
+"0","                        ""Type of Cuisine"", ""Acohol?"", ""Entree Price Range"")"
