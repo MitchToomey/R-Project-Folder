@@ -1,0 +1,8 @@
+"0",""
+"0","# This command creates side-by-side boxplots."
+"0",""
+"0","boxplot(students$read ~ students$ses,"
+"0","        ylim = c(20, 80),"
+"0","        xlab = ""SES Level"","
+"0","        ylab = ""Reading Score"")"
+"0",""

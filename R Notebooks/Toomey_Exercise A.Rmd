@@ -25,14 +25,20 @@ logical_distance <- as.logical(distance)
 ```
 
 ### 5
-#I got all TRUE statements because all the numbers are above zero
+I got all TRUE statements because all the numbers are above zero
 
 ### 6
-#I would use the attribute function. 
+I would use the attribute function. But I should have used a data frame!!! 
 
 ### 7
 ```{r}
-attr(distance, "emails") <-c ("ademir@email.sc.edu","ojlewis@email.sc.edu", "gonzalsk@email.sc.edu" ,"binhazza@email.sc.edu", "tt12@email.sc.edu", "walterc5@email.sc.edu")
+EDRM718_Classmates <- data.frame("Names" c("Olivia", "Asiye", "Charlie", "Hazza", "Shelby", "Mitchell"), "Emails" c("ademir@email.sc.edu","ojlewis@email.sc.edu", "gonzalsk@email.sc.edu" ,"binhazza@email.sc.edu", "tt12@email.sc.edu", "walterc5@email.sc.edu"), "Distance" c(2,2,5,9,5,70))
+```
+
+
+### 7
+```{r}
+attr(distance, "emails") <- "Names" c("Olivia", "Asiye", "Charlie", "Hazza", "Shelby", "Mitchell"), "Emails" c("ademir@email.sc.edu","ojlewis@email.sc.edu", "gonzalsk@email.sc.edu" ,"binhazza@email.sc.edu", "tt12@email.sc.edu", "walterc5@email.sc.edu"), "Distance" c(2,2,5,9,5,70) 
 ```
 
 ### 8
@@ -55,7 +61,7 @@ correlation_matrix <- matrix( c( 1.0,  0.378,  -0.093,  0.378,
 ### 10
 ```{r}
 rownames(correlation_matrix) <- c("IQ", "Brain Size", "Height")
-colnames(correlation_matrix) <- c("ID", "Brain Size", "Height")
+colnames(correlation_matrix) <- c("IQ", "Brain Size", "Height")
 
 correlation_matrix
 ```
@@ -65,7 +71,7 @@ correlation_matrix
 restaurant_info <- list("Sconyers", "Augusta, GA", "9am-9pm", "BBQ", "no acohol", "$7-$20")
 
 names(restaurant_info) <- c("Restaurant Name", "City", "Open Hours",
-                        "Type of Cuisine", "Acohol?", "Entree Price Range")
+                        "Type of Cuisine", "Alcohol?", "Entree Price Range")
 ```
 
 ### 12
@@ -75,19 +81,22 @@ comment(restaurant_info) <- c("Sconyer's BBQ is a lovely staple to the city of A
 
 ### 13
 ```{r}
-distance > 5
 
 # There are only 2 people on my list who live more than 5 miles from campus. 
 
 distance_greater_5 <- c(9, 70)
-sum(distance_greater_5)
+(sum(distance > 5)
 
-# Everyone on my list's total miles from campus is 93 miles. 
+# The people over 5 miles on my list's total miles from campus is 79 miles. 
 ```
 
 ### 14
 ```{r}
-distance > 10
+#distance > 10
+
+sum(distance > 10)
+
+as.logical(sum(distance > 10))
 
 # One student on my list lives more than 10 miles from the University.
 ```
@@ -101,9 +110,9 @@ Student_Data
 
 ### 16
 ```{r}
-typeof(Student_Data)
+class(Student_Data)
 
-#The data are stored in a list. 
+#The data are stored in a data frame, which is a type of list. 
 ```
 
 ### 17
@@ -135,7 +144,7 @@ t.test(Student_Data$Score ~ Student_Data$Gender)
 
 #The 95 % confidence interval is between -2.174 and 3.454
 
-t_result <- c(t.test(Student_Data$Score ~ Student_Data$Gender))
+t_result <- t.test(Student_Data$Score ~ Student_Data$Gender)
 ```
 
 ### 21
@@ -165,11 +174,8 @@ mean(Student_Data$Score)
 
 sd(Student_Data$Score)
 
-z_scores <- (Student_Data$Score-mean(Student_Data$Score))/sd(Student_Data$Score)
+Student_Data$z_scores <- (Student_Data$Score-mean(Student_Data$Score))/sd(Student_Data$Score)
 
-z_scores
-
-cbind(Student_Data, z_scores)
 ```
 
 ### 25
@@ -177,6 +183,8 @@ cbind(Student_Data, z_scores)
 # Number of z-scores that are positive
 
 length(which(z_scores > 0))
+
+length(z_scores > 0)
 ```
 
 ### 26

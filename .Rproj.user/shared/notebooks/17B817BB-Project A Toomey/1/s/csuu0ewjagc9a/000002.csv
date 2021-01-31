@@ -1,0 +1,7 @@
+"0","sex.counts_12 <- table(guns_data$sex)"
+"0",""
+"0","sex.props_12 <- prop.table(sex.counts_12)"
+"0",""
+"0","barplot(sex.props_12,"
+"0","        xlab = ""Sex Groups"","
+"0","        ylab = ""Proportion"", ylim = c(0, 1))"

@@ -1,0 +1,7 @@
+"0","race.counts_19 <- table(data_2019$race)"
+"0",""
+"0","race.props_19 <- prop.table(race.counts_19)"
+"0",""
+"0","barplot(race.props_19,"
+"0","        xlab = ""Race Groups"","
+"0","        ylab = ""Proportion"", ylim = c(0, 1), cex.names=.5)"

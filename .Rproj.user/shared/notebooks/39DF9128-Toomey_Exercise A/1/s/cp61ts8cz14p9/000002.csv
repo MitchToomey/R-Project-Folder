@@ -1,0 +1,4 @@
+"0","EDRM718_Classmates <- data.frame(""Names"" c(""Olivia"", ""Asiye"", ""Charlie"", ""Hazza"", ""Shelby"", ""Mitchell""), ""Emails"" c(""ademir@email.sc.edu"",""ojlewis@email.sc.edu"", ""gonzalsk@email.sc.edu"" ,""binhazza@email.sc.edu"", ""tt12@email.sc.edu"", ""walterc5@email.sc.edu""), ""Distance"" c(2,2,5,9,5,70))
+"
+"2","Error: unexpected symbol in ""EDRM718_Classmates <- data.frame(""Names"" c""
+"
