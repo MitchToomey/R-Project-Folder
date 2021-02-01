@@ -31,13 +31,14 @@ Figure 1 shows the proportion of gun deaths in 2012 by intent. According to the 
 *Figure 1. Bar plots with proportion of gun death intent*
 
 ```{r echo = FALSE}
-intent.counts_12 <- table(guns_data$intent)
+intent_counts_12 <- table(guns_data$intent)
 
-intent.props_12 <- prop.table(intent.counts_12)
+intent_props_12 <- prop.table(intent_counts_12)
 
-barplot(intent.props_12,
+barplot(intent_props_12,
         xlab = "Intent",
-        ylab = "Proportion", ylim = c(0, 1))
+        ylab = "Proportion", 
+        ylim = c(0, 1))
 ```
 
 ***
@@ -45,7 +46,7 @@ Table 1 shows in numeric form that homicide and suicide made up the largest prop
 
 *Table 1. Frequencies and proportions of gun deaths by intent.* 
 ```{r echo = FALSE}
-cbind(intent.counts_12, intent.props_12)
+cbind(intent_counts_12, intent_props_12)
 ```
 
 ***
@@ -54,13 +55,14 @@ Figure 2 shows that males had higher rates of gun deaths in 2012 than females.
 *Figure 2. Bar plots with proportion gun deaths by sex*
 
 ```{r echo = FALSE}
-sex.counts_12 <- table(guns_data$sex)
+sex_counts_12 <- table(guns_data$sex)
 
-sex.props_12 <- prop.table(sex.counts_12)
+sex_props_12 <- prop.table(sex_counts_12)
 
-barplot(sex.props_12,
+barplot(sex_props_12,
         xlab = "Sex Groups",
-        ylab = "Proportion", ylim = c(0, 1))
+        ylab = "Proportion", 
+        ylim = c(0, 1))
 ```
 
 ***
@@ -68,7 +70,7 @@ Table 2 provides the numeric forms of the data presented in figure 2, showing th
 
 *Table 2. Frequencies and proportions of gun deaths by sex* 
 ```{r echo = FALSE}
-cbind(sex.counts_12, sex.props_12)
+cbind(sex_counts_12, sex_props_12)
 ```
 
 ***
@@ -77,13 +79,15 @@ According to figure 3, White individuals comprised the highest proportion of gun
 *Figure 3. Bar plots with proportion of gun deaths by race*
 
 ```{r echo = FALSE}
-race.counts_12 <- table(guns_data$race)
+race_counts_12 <- table(guns_data$race)
 
-race.props_12 <- prop.table(race.counts_12)
+race_props_12 <- prop.table(race_counts_12)
 
-barplot(race.props_12,
+barplot(race_props_12,
         xlab = "Race Groups",
-        ylab = "Proportion", ylim = c(0, 1), cex.names=.5)
+        ylab = "Proportion", 
+        ylim = c(0, 1), 
+        cex.names=.5)
 ```
 
 ***
@@ -91,7 +95,7 @@ Table 3 numerically represents the results in Figure 3, and shows that White and
 
 *Table 3. Frequencies and proportions of gun deaths by race* 
 ```{r echo = FALSE}
-cbind(race.counts_12, race.props_12)
+cbind(race_counts_12, race_props_12)
 ```
 
 
@@ -120,13 +124,14 @@ Figure 4 shows that in 2019, the number of gun deaths were comprised mostly of s
 *Figure 4. Bar plots with proportion of gun death intent in 2019*
 
 ```{r echo=FALSE}
-intent.counts_19 <- table(data_2019$intent)
+intent_counts_19 <- table(data_2019$intent)
 
-intent.props_19 <- prop.table(intent.counts_19)
+intent_props_19 <- prop.table(intent_counts_19)
 
-barplot(intent.props_19,
+barplot(intent_props_19,
         xlab = "Intent",
-        ylab = "Proportion", ylim = c(0, 1))
+        ylab = "Proportion", 
+        ylim = c(0, 1))
 ```
 
 ***
@@ -134,7 +139,7 @@ Table 4 numerically demonstrates that suicide and homicide comprised approximate
 
 *Table 4. Frequencies and proportions of gun deaths in 2019 by intent* 
 ```{r echo = FALSE}
-cbind(intent.counts_19, intent.props_19)
+cbind(intent_counts_19, intent_props_19)
 ```
 
 ***
@@ -143,13 +148,14 @@ Figure 5 shows that in 2019, males comprised a higher proportion of gun deaths t
 *Figure 5. Bar plots with proportion gun deaths by sex in 2019*
 
 ```{r echo=FALSE}
-sex.counts_19 <- table(data_2019$sex)
+sex_counts_19 <- table(data_2019$sex)
 
-sex.props_19 <- prop.table(sex.counts_19)
+sex_props_19 <- prop.table(sex_counts_19)
 
-barplot(sex.props_19,
+barplot(sex_props_19,
         xlab = "Sex Groups",
-        ylab = "Proportion", ylim = c(0, 1))
+        ylab = "Proportion", 
+        ylim = c(0, 1))
 ```
 
 ***
@@ -157,7 +163,7 @@ Table 5 shows numerically that males made up 86% of gun deaths and and females m
 
 *Table 5. Frequencies and proportions of gun deaths in 2019 by sex* 
 ```{r echo = FALSE}
-cbind(sex.counts_19, sex.props_19)
+cbind(sex_counts_19, sex_props_19)
 ```
 ***
 Figure 6 shows the highest proportions of gun deaths in 2019 were among White individuals, followed by Black individuals, then Hispanic individuals, Asian/Pacific Islander individuals, and Native individuals.
@@ -165,13 +171,15 @@ Figure 6 shows the highest proportions of gun deaths in 2019 were among White in
 *Figure 6. Bar plots with proportion of gun deaths by race in 2019*
 
 ```{r echo=FALSE}
-race.counts_19 <- table(data_2019$race)
+race_counts_19 <- table(data_2019$race)
 
-race.props_19 <- prop.table(race.counts_19)
+race_props_19 <- prop.table(race_counts_19)
 
-barplot(race.props_19,
+barplot(race_props_19,
         xlab = "Race Groups",
-        ylab = "Proportion", ylim = c(0, 1), cex.names=.5)
+        ylab = "Proportion", 
+        ylim = c(0, 1), 
+        cex.names=.5)
 ```
 
 ***
@@ -179,7 +187,7 @@ Table 6 numerically shows that White individuals comprised 61% of gun deaths in 
 
 *Table 6. Frequencies and proportions of gun deaths in 2019 by race* 
 ```{r echo = FALSE}
-cbind(race.counts_19, race.props_19)
+cbind(race_counts_19, race_props_19)
 ```
 
 ### Analyses comparing gun deaths between 2012 and 2019
@@ -189,7 +197,7 @@ Figure 7 shows that the proportions of gun deaths by intent were mostly similar 
 
 *Figure 7. Comparing intent behind gun deaths between years 2012 and 2019.* 
 ```{r echo=FALSE}
-intent_12_19 <- cbind(intent.counts_12, intent.counts_19)
+intent_12_19 <- cbind(intent_counts_12, intent_counts_19)
 
 intent_12_19_percent <- 100*prop.table(intent_12_19, 2)
 
@@ -207,7 +215,7 @@ Figure 8 shows that proportions of gun deaths between males and females were ver
 
 *Figure 8. Comparing gun deaths by sex between years 2012 and 2019.* 
 ```{r echo=FALSE}
-sex_12_19 <- cbind(sex.counts_12, sex.counts_19)
+sex_12_19 <- cbind(sex_counts_12, sex_counts_19)
 
 sex_12_19_percent <- 100*prop.table(sex_12_19, 2)
 
@@ -225,7 +233,7 @@ According to figure 9, the the proportions of gun deaths between 2012 and 2019 w
 
 *Figure 9. Comparing gun deaths by race between years 2012 and 2019.* 
 ```{r echo=FALSE}
-race_12_19 <- cbind(race.counts_12, race.counts_19)
+race_12_19 <- cbind(race_counts_12, race_counts_19)
 
 race_12_19_percent <- 100*prop.table(race_12_19, 2)
 

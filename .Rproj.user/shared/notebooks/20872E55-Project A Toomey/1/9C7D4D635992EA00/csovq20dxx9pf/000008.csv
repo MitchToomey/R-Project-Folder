@@ -1,0 +1,7 @@
+"0","race_counts_12 <- table(guns_data$race)"
+"0",""
+"0","race_props_12 <- prop.table(race_counts_12)"
+"0",""
+"0","barplot(race_props_12,"
+"0","        xlab = ""Race Groups"","
+"0","        ylab = ""Proportion"", ylim = c(0, 1), cex.names=.5)"

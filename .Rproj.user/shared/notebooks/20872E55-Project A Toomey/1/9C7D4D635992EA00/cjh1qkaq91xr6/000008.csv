@@ -1,0 +1,7 @@
+"0","intent_counts_19 <- table(data_2019$intent)"
+"0",""
+"0","intent_props_19 <- prop.table(intent_counts_19)"
+"0",""
+"0","barplot(intent_props_19,"
+"0","        xlab = ""Intent"","
+"0","        ylab = ""Proportion"", ylim = c(0, 1))"

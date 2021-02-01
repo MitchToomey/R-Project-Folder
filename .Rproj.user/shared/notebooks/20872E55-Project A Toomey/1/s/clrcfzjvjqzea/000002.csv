@@ -1,0 +1,4 @@
+"0","guns_data <- read.csv(""full_data.csv"", header = TRUE, sep = "","")"
+"0",""
+"0","data_2012 <- subset(guns_data, guns_data$year == ""2012"")"
+"0",""
