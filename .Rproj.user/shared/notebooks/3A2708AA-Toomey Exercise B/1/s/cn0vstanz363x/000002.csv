@@ -1,0 +1,7 @@
+"0","# use the cut function to organize data into four bins"
+"0",""
+"0","rand_norms_new <- cut(rand_norms,"
+"0","                      breaks = c(0, 80, 100, 120))"
+"0",""
+"0","levels(rand_norms_new) <- c (""First Bin"", ""Second Bin"", ""Third Bin"", ""Fourth Bin"")"
+"0",""

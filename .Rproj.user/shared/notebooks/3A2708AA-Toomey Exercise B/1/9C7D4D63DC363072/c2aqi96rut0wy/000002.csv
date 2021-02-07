@@ -1,0 +1,6 @@
+"0","# Created a new factor. "
+"0",""
+"0","student_class <- factor(c(1, 1, 1, 1, 1, 2, 2, 2, 2, 2, 3, 3, 3, 3, 3, 4, 4, "
+"0","                            4, 4, 4))"
+"0",""
+"0","levels(student_class) <- c(""freshman"", ""sophomore"", ""junior"", ""senior"")"

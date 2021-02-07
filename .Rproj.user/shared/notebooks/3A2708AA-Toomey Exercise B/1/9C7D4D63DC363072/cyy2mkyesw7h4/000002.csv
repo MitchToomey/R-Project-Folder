@@ -1,0 +1,3 @@
+"0","# I created a vector with all elements of vector a less than 40. "
+"0",""
+"0","vector_d <- vector_a[vector_a < 40] "

@@ -1,0 +1,3 @@
+"0","# I transposed matrix c and stored the results in matrix e."
+"0",""
+"0","matrix_e <- t(matrix_c)"

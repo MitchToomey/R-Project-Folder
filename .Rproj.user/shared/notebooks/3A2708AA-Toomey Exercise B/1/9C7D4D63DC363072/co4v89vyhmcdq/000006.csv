@@ -1,0 +1,6 @@
+"0","# Created a vector that contains 100 random values from a normal distr. with a mean of 50 and an SD of 10."
+"0",""
+"0","vector_a <- 1:100"
+"0",""
+"0","vector_a <- rnorm(100, 50, 10)"
+"0",""

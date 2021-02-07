@@ -1,0 +1,6 @@
+"0","public_scores <- public_scores[1:25, ]"
+"0",""
+"0","private_scores <- private_scores[1:25, ]"
+"0",""
+"0","scores_array <- array(c(public_scores, private_scores),                     "
+"0","                      dim = c(25, 5, 2))"

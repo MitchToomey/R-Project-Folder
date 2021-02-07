@@ -1,0 +1,4 @@
+"0","# I calculated the means of each of the rows in hsb2_trans. They are in the "
+"0","# following order: read, write, math, science, socst. "
+"0",""
+"0","test_means <- rowMeans(hsb2_trans)"

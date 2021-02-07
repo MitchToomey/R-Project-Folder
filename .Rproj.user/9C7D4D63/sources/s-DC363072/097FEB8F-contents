@@ -1,0 +1,413 @@
+---
+title: "R Factors"
+author: "Michael A. Seaman"
+output: html_notebook
+---
+
+```{r include=FALSE}
+
+library(here)
+
+```
+
+Statisticians refer to categorical variables as *factors*. So does R. In this
+notebook we will explore creating factors, altering factors, and common
+functions to use with factors.
+
+### Creating Useful Factors
+
+Given the useful information that can be contained in an R factor, it is
+typically valuable to add that information when creating the factor and not
+just the data. Let's look at how to do this.
+
+```{r}
+
+# We use the factor function to create a factor.
+
+study_condition <- factor(c(1, 1, 1, 1, 2, 2, 2, 2, 3, 3, 3, 3))
+study_outcome <- c(23, 25, 21, 25, 29, 30, 26, 28, 40, 31, 37, 35)
+
+# Let's look at the characteristics of this factor.
+
+study_condition
+
+attributes(study_condition)
+
+# Note that even though we have entered numerals and even though factors
+# are stored as integers, we cannot use them with numerical functions.
+
+mean(study_condition)
+
+# We can view the levels of a factor with the levels function.
+
+levels(study_condition)
+
+# We can also use the level function to name factor elements.
+
+levels(study_condition) <- c("Control", "Trt 1", "Trt 2")
+
+study_condition
+
+# We can name factor conditions at the time of creation with the labels
+# argument.
+
+study_condition <- factor(c(1, 1, 1, 1, 2, 2, 2, 2, 3, 3, 3, 3),
+                          labels = c("Control", "Trt 1", "Trt 2"))
+
+study_condition
+
+# Let's suppose that our vector wasn't in order.
+
+study_condition <- factor(c(2, 1, 1, 3, 2, 1, 3, 2, 2, 1, 3, 3),
+                          labels = c("Control", "Trt 1", "Trt 2"))
+
+study_condition
+
+# The labels are still correct because they are assigned in numerical
+# order. We could switch the order.
+
+study_condition <- factor(c(2, 1, 1, 3, 2, 1, 3, 2, 2, 1, 3, 3),
+                          labels = c("Trt 1", "Trt 2", "Control"))
+
+study_condition
+
+# The order of the labels matches the numerical order of the factor.
+# We could also change the order like this.
+
+study_condition <- factor(c(1, 1, 1, 1, 2, 2, 2, 2, 3, 3, 3, 3),
+                          levels = c(3, 2, 1),
+                          labels = c("Control", "Trt 1", "Trt 2"))
+
+study_condition
+
+# Notice that the labels are assumed by the levels. Also notice that the
+# order of the levels now matches the reordering we've done.
+
+levels(study_condition)
+
+# Suppose that we want to change the control level to "Placebo".
+# We can treat the levels as a vector.
+
+levels(study_condition)[1] <- "Placebo"
+
+study_condition
+
+# We can also label factors by naming them in our data vector.
+
+dosage <- factor(c("Low", "Low", "High", "Medium", "Medium", "High"))
+
+dosage
+
+# The levels are in alphabetical order. Let's change that.
+
+dosage <- factor(dosage,
+                 levels = c("Low", "Medium", "High"))
+
+dosage
+
+# We could have also done this at the time of creation.
+
+dosage <- factor(c("Low", "Low", "High", "Medium", "Medium", "High"),
+                 levels = c("Low", "Medium", "High"))
+
+dosage
+
+# Remember that numerical functions don't work with this. Try typing this in
+# the console:
+
+# min(dosage)
+
+# Yet these dosages are ordered categorical variables. Taking the minimum
+# should make sense. We can tell R that these are ordered!
+
+dosage <- factor(c("Low", "Low", "High", "Medium", "Medium", "High"),
+                 levels = c("Low", "Medium", "High"),
+                 ordered = TRUE)
+
+min(dosage)
+
+# We can use the gl function to generate factors in a sequence, much like
+# the seq function generates numeric sequences. The following will
+# generate four levels with 20 participants at each level, and provide
+# labels.
+
+study_condition <- gl(4,
+                      20,
+                      labels = c("Condition A",
+                                 "Condition B",
+                                 "Condition C",
+                                 "Condition D"))
+
+study_condition
+
+```
+
+
+### Common Factor Functions
+
+Now let's look at a few of the most commonly used functions when working with
+factors. There are many more than these (as we will see later in the course),
+but this handful of functions will provide you the tools to do much of what
+you need to do with factors.
+
+```{r}
+
+# Let's read in the Mount Juniper Elementary Data.
+
+Mt_Juniper <- read.csv(here("Data", "Mount Juniper Elementary Data.csv"))
+
+# Grade level is an ordered factor.
+
+Mt_Juniper$Grade <- factor(Mt_Juniper$Grade,
+                           levels = c(3, 4, 5),
+                           labels = c("Third", "Fourth", "Fifth"),
+                           ordered = TRUE)
+
+# Let's check that grade is now a factor.
+
+is.factor(Mt_Juniper$Grade)
+
+# The structure function provides information about objects, including factors.
+
+str(Mt_Juniper)
+
+# Note that whether or not the read.csv function will turn a character
+# vector into a factor depends on the version of R. This is unfortunate, but
+# we can avoid difficulties by checking it. That can be done like this.
+
+default.stringsAsFactors()
+
+# Let me read in the data again and turn all strings to factors.
+
+Mt_Juniper <- read.csv(here("Data", "Mount Juniper Elementary Data.csv"),
+                       stringsAsFactors = TRUE)
+
+str(Mt_Juniper)
+
+# The reason that this was changed with newer versions of R is that it usually
+# is better to keep characters as characters unless we explicitly tell R that
+# we want it to be a factor, so let's change it back.
+
+Mt_Juniper <- read.csv(here("Data", "Mount Juniper Elementary Data.csv"),
+                       stringsAsFactors = FALSE)
+
+str(Mt_Juniper)
+
+# I would actually like gender to be a factor. Here's how to keep some
+# vectors as character vectors, but not others.
+
+Mt_Juniper <- read.csv(here("Data", "Mount Juniper Elementary Data.csv"),
+                       as.is = c(TRUE, TRUE, FALSE, TRUE, TRUE))
+
+str(Mt_Juniper)
+
+Mt_Juniper$Grade <- factor(Mt_Juniper$Grade,
+                           levels = c(3, 4, 5),
+                           labels = c("Third", "Fourth", "Fifth"),
+                           ordered = TRUE)
+
+str(Mt_Juniper)
+
+# The table function provides counts of factor values.
+
+table(Mt_Juniper$Grade)
+
+# We can check that the sum of these frequencies matches the number in
+# our data set.
+
+sum(table(Mt_Juniper$Grade)) == length(Mt_Juniper$Grade)
+
+# We can use the cut function to create equal-interval categories from
+# a quantitative variable.
+
+Mt_Juniper$Score_Level <- cut(Mt_Juniper$Score, breaks = 3)
+
+table(Mt_Juniper$Score_Level)
+
+# Note that this new variable is a factor with the cut points as the
+# labels.
+
+str(Mt_Juniper)
+
+# Even though these are equal intervals, we might want nicer looking break
+# points. The pretty function will help.
+
+Mt_Juniper$Score_Level <- cut(Mt_Juniper$Score,
+                              pretty(Mt_Juniper$Score))
+
+table(Mt_Juniper$Score_Level)
+
+# We can specify our own intervals.
+
+Mt_Juniper$Score_Level <- cut(Mt_Juniper$Score,
+                              c(45, 75, 105))
+
+table(Mt_Juniper$Score_Level)
+
+# Notice the minimum and maximum and what happens if I don't include
+# some scores in my cut,
+
+min(Mt_Juniper$Score, na.rm = TRUE)
+max(Mt_Juniper$Score, na.rm = TRUE)
+
+Mt_Juniper$Score_Level <- cut(Mt_Juniper$Score,
+                              c(50, 75, 100))
+
+table(Mt_Juniper$Score_Level)
+
+# We can, of course, change the labels.
+
+Mt_Juniper$Score_Level <- cut(Mt_Juniper$Score,
+                              c(45, 65, 85, 105))
+
+table(Mt_Juniper$Score_Level)
+
+levels(Mt_Juniper$Score_Level) <- c("Low", "Medium", "High")
+
+str(Mt_Juniper)
+
+table(Mt_Juniper$Score_Level)
+
+# This is an ordered factor, but we've already created the factor.
+# can we indicate that it is an ordered factor? Of course!
+
+Mt_Juniper$Score_Level <- ordered(Mt_Juniper$Score_Level)
+
+str(Mt_Juniper)
+
+# Notice that this time the sum of frequencies doesn't match the length
+# of our vector. Why not?
+
+sum(table(Mt_Juniper$Score_Level)) == length(Mt_Juniper$Score_Level)
+
+# Let's get rid of the missing values. This time we'll use a function
+# called complete.cases.
+
+Mt_Juniper <- Mt_Juniper[complete.cases(Mt_Juniper),]
+
+sum(table(Mt_Juniper$Score_Level)) == length(Mt_Juniper$Score_Level)
+
+# Let's lump medium and high together so that we only have low and high.
+
+Mt_Juniper$Score_Level[Mt_Juniper$Score_Level == "Medium"] <- "High"
+
+table(Mt_Juniper$Score_Level)
+
+# Oops! Medium is still a factor. We can eliminate it with the droplevels
+# function.
+
+Mt_Juniper$Score_Level <- droplevels(Mt_Juniper$Score_Level)
+
+table(Mt_Juniper$Score_Level)
+
+```
+
+
+### Graphs and Statistics with Factors
+
+Factors are used to represent categorical data, so we will use factors when we
+want create graphs or perform any analysis that includes categorical data.
+Let's look at just a few examples.
+
+First, let's calculate descriptive statistics for a single categorical
+variable.
+
+```{r}
+
+table(Mt_Juniper$Grade)
+
+prop.table(table(Mt_Juniper$Grade))
+
+```
+
+
+Here is a graph for a single categorical variable.
+
+```{r}
+
+barplot(prop.table(table(Mt_Juniper$Grade)),
+        ylab = "Proportion",
+        ylim = c(0, 0.4))
+
+```
+
+
+Now descriptive statistics for two categorical variables.
+
+```{r}
+
+table(Mt_Juniper$Score_Level, Mt_Juniper$Grade)
+
+prop.table(table(Mt_Juniper$Score_Level, Mt_Juniper$Grade), 2)
+
+```
+
+
+Now a graph for two categorical variables.'
+
+```{r}
+
+barplot(prop.table(table(Mt_Juniper$Score_Level, Mt_Juniper$Grade), 2),
+        ylab = "Proportion",
+        legend = c("Low", "High"))
+
+```
+
+
+Let's add inference for two categorical variables.
+
+```{r}
+
+chisq.test(Mt_Juniper$Score_Level, Mt_Juniper$Grade)
+
+```
+
+
+Here is a graph for two groups with a quantitative response variable.
+
+```{r}
+
+boxplot(Mt_Juniper$Score ~ Mt_Juniper$Score_Level,
+        xlab = "Score Level",
+        ylab = "Score")
+        
+```        
+
+
+Here are descriptive and inferential statistics for two groups with a
+quantitative response variable.
+
+```{r}
+
+tapply(Mt_Juniper$Score, Mt_Juniper$Score_Level, summary)
+tapply(Mt_Juniper$Score, Mt_Juniper$Score_Level, mean)
+tapply(Mt_Juniper$Score, Mt_Juniper$Score_Level, sd)
+
+t.test(Mt_Juniper$Score ~ Mt_Juniper$Score_Level)
+
+```
+
+
+Here is a graph for more than two groups with a quantitative response variable.
+
+```{r}
+
+boxplot(Mt_Juniper$Score ~ Mt_Juniper$Grade,
+        xlab = "Grade",
+        ylab = "Score")
+
+```
+
+
+Here are descriptive and inferential statistics for more than two groups with a
+quantitative response variable.
+
+```{r}
+
+tapply(Mt_Juniper$Score, Mt_Juniper$Grade, summary)
+tapply(Mt_Juniper$Score, Mt_Juniper$Grade, mean)
+tapply(Mt_Juniper$Score, Mt_Juniper$Grade, sd)
+
+anova(lm(Mt_Juniper$Score ~ Mt_Juniper$Grade))
+
+```
