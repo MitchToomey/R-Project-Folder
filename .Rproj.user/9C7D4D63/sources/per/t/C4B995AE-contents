@@ -1,0 +1,467 @@
+---
+title: "Exercise Set B"
+author: "Michael A. Seaman"
+output: html_notebook
+---
+
+This is the instructor's notebook for the completion of the exercises in
+Exercise Set B.
+
+```{r include=FALSE}
+
+library(here)
+
+```
+
+***
+
+*1. Create a vector called Vector_A that contains 100 randomly selected values*
+*from a normal distribution that has a mean of 50 and a standard deviation of*
+*10.*
+
+```{r}
+
+Vector_A <- rnorm(100, 50, 10)
+
+```
+
+***
+
+*2. Create Vector_B by selecting the first, third, and eighth elements of*
+*Vector_A.*
+
+```{r}
+
+Vector_B <- Vector_A[c(1, 3, 8)]
+
+```
+
+***
+
+*3. Create Vector_C by selecting all the elements of Vector_A except for the*
+*10th and 15th elements.*
+
+```{r}
+
+Vector_C <- Vector_A[c(-10, -15)]
+
+```
+
+***
+
+*4. Create Vector_D by selecting all the elements of Vector_A that are less*
+*than 40.*
+
+```{r}
+
+Vector_D <- Vector_A[Vector_A < 40]
+
+```
+
+***
+
+*5. Find the length of Vector_D.*
+
+```{r}
+
+length(Vector_D)
+
+```
+
+***
+
+*6. Count how many elements of Vector_A are positive.*
+
+```{r}
+
+sum(sign(Vector_A) == 1)
+
+#or
+
+sum(Vector_A > 0)
+
+```
+
+***
+
+*7. Find the minimum and maximum values in Vector_A.*
+
+```{r}
+
+min(Vector_A)
+max(Vector_A)
+
+```
+
+***
+
+*8. Create Vector_E so that it has the same values as Vector_A, but in*
+*numerical order.*
+
+```{r}
+
+Vector_E <- Vector_A[order(Vector_A)]
+
+```
+
+***
+
+*9. Create Vector_F so that it contains even numbers from 2 to 100.*
+
+```{r}
+
+Vector_F <- seq(2, 100, by = 2)
+
+```
+
+***
+
+*10. Create Vector_G so that it is Vector_F in reverse order.*
+
+```{r}
+
+Vector_G <- rev(Vector_F)
+
+```
+
+***
+
+*11. Create Vector_H by adding Vector_F to Vector_G.*
+
+```{r}
+
+Vector_H <- Vector_F + Vector_G
+
+```
+
+***
+
+*12. Create the three matrices shown below. Name these matrices A, B, and C,* *respectively.*
+
+$$
+\left[\begin{array}
+{rrr}
+4 & 2 \\
+2 & 3 \\
+6 & 6
+\end{array}\right]
+\left[\begin{array}
+{rrr}
+7 & 3 \\
+2 & 5 \\
+\end{array}\right]
+\left[\begin{array}
+{rrr}
+8	& 5 & 1 \\
+1 & 3 & 4 \\
+1 & 7 & 2 \end{array}\right]
+$$
+
+```{r}
+
+A <- matrix(c(4, 2, 6, 2, 3, 6),
+            ncol = 2)
+
+B <- matrix(c(7, 2, 3, 5),
+            ncol = 2)
+
+C <- matrix(c(8, 1, 1, 5, 3, 7, 1, 4, 2),
+            ncol = 3)
+
+```
+
+***
+
+*13. Extract the value in the first row and second column of A and store it*
+*in my_value.*
+
+```{r}
+
+my_value <- A[1, 2]
+
+```
+
+***
+
+*14. Extract the bottom two rows of A to create a new matrix, D.*
+
+```{r}
+
+D <- A[2:3, ]
+
+```
+
+***
+
+*15. Name the columns of A with Var_1 and Var_2.*
+
+```{r}
+
+colnames(A) <- c("Var_1", "Var_2")
+
+```
+
+***
+
+*16. Name the rows of A with Bob, Mary, and Shameka.*
+
+```{r}
+
+rownames(A) <- c("Bob", "Mary", "Shameka")
+
+```
+
+***
+
+*17. Transpose matrix C and store the result in a new matrix, E.*
+
+```{r}
+
+E <- t(C)
+
+```
+
+***
+
+*18. Change matrix E by adding 15 to every element.*
+
+```{r}
+
+E <- E + 15
+
+```
+
+***
+
+*19. Read the HSB2 data into an object and put the score data for the five*
+*tests into a matrix.*
+
+```{r}
+
+hsb2 <- read.csv(here("Data", "hsb2.csv"))
+
+scores <- cbind(hsb2$read, hsb2$write, hsb2$math, hsb2$science, hsb2$socst)
+colnames(scores) <- colnames(hsb2[7:11])
+
+```
+
+***
+
+*20. Transpose the score matrix and save it in another object.*
+
+```{r}
+
+t_scores <- t(scores)
+
+```
+
+***
+
+*21. Calculate the means for the five tests and store these, with appropriate*
+*names, in a vector called test_means.*
+
+```{r}
+
+test_means <- colMeans(scores)
+names(test_means) <- colnames(scores)
+
+```
+
+***
+
+*22. Create two matrices so that one contains the test score data for public*
+*school students and the other contains the test score data for private school*
+*students.*
+
+```{r}
+
+public_scores <- as.matrix(hsb2[hsb2$schtyp == 1, 7:11])
+rownames(public_scores) <- NULL
+
+private_scores <- as.matrix(hsb2[hsb2$schtyp == 2, 7:11])
+rownames(private_scores) <- NULL
+
+```
+
+***
+
+*23. Store the scores for the first 25 students in each of the two matrices in*
+*an array.*
+
+```{r}
+
+school_scores <- array(c(as.vector(public_scores[1:25, ]),
+                       as.vector(private_scores[1:25, ])),
+                       dim = c(25, 5, 2),
+                       dimnames = list(NULL,
+                                       colnames(scores),
+                                       c("public", "private")))
+
+```
+
+***
+
+*24. Name the test type and school dimensions in the array. If you had already* *named these when you created the array, do the opposite. Eliminate the names.*
+
+```{r}
+
+dimnames(school_scores) <- list(NULL, NULL, NULL)
+
+```
+
+***
+
+*25. Create a factor, student_class, to indicate whether a student is a*
+*freshman, sophomore, junior, or senior. Assume that you have five students in* *each classification. Make sure to include the classification names.*
+
+```{r}
+
+student_class <- factor(rep(1:4, each = 5),
+                        labels = c("freshman",
+                                   "sophomore",
+                                   "junior",
+                                   "senior"))
+
+```
+
+***
+
+*26. Change the levels of student_class to “1st year”, “2nd year”, “3rd year”,*
+*and “4th year”.*
+
+```{r}
+
+levels(student_class) <- c("1st year", "2nd year", "3rd year", "4th year")
+
+```
+
+***
+
+*27. Use the subset operator with student_class to create a new_student_class*
+*that does not contain the 1st year students.*
+
+```{r}
+
+new_student_class <- student_class[student_class != "1st year"]
+
+```
+
+***
+
+*28. Drop the unused level from new_student_class.*
+
+```{r}
+
+new_student_class <- droplevels(new_student_class)
+
+```
+
+***
+
+*29. Read in the HSB2 data and create a factor, with appropriate labels, for*
+*each variable that should be a factor. If there is order to the variable*
+*values, make sure to make it an ordered factor.*
+
+```{r}
+
+hsb2 <- read.csv(here("Data", "hsb2.csv"))
+
+hsb2$id <- factor(hsb2$id)
+
+hsb2$female <- factor(hsb2$female,
+                      levels = c(0, 1),
+                      labels = c("male", "female"))
+
+hsb2$race <- factor(hsb2$race,
+                    levels = c(1:4),
+                    labels = c("hispanic", "asian", "african-amer", "white"))
+
+hsb2$ses <- factor(hsb2$ses,
+                   levels = c(1:3),
+                   labels = c("low", "middle", "high"),
+                   ordered = TRUE)
+
+hsb2$schtyp <- factor(hsb2$schtyp,
+                      levels = c(1, 2),
+                      labels = c("public", "private"))
+
+hsb2$prog <- factor(hsb2$prog,
+                    levels = c(1:3),
+                    labels = c("general", "academic", "vocational"))
+
+```
+
+***
+
+*30. Use the factors you created for the HSB2 data to help you calculate means*
+*for science scores by gender, SES, and the combination of these two*
+*categorical variables.*
+
+```{r}
+
+tapply(hsb2$science, hsb2$female, mean)
+tapply(hsb2$science, hsb2$ses, mean)
+tapply(hsb2$science, list(hsb2$female, hsb2$ses), mean)
+
+```
+
+***
+
+*31. Create a new well-labeled factor variable that indicates which quartile*
+*each student is in based on math score.*
+
+```{r}
+
+hsb2$math_quart <- cut(hsb2$math,
+                       breaks = c(0,
+                                  quantile(hsb2$math)[2],
+                                  quantile(hsb2$math)[3],
+                                  quantile(hsb2$math)[4],
+                                  Inf),
+                       labels = c("Q1",
+                                  "Q2",
+                                  "Q3",
+                                  "Q4"))
+
+```
+
+***
+
+*32. Sort the data based on math score.*
+
+```{r}
+
+hsb2 <- hsb2[order(hsb2$math), ]
+
+```
+
+***
+
+*33. Randomly select 1000 scores from a normal distribution with a mean of 100* *and a standard deviation of 15. Save these scores in rand_norms.*
+
+```{r}
+
+rand_norms <- rnorm(1000, 100, 15)
+
+```
+
+***
+
+*34. Create a factor that categorizes these random numbers into four bins: 0*
+*to 80, 80 to 100, 100 to 120, and over 120. Provide reasonable labels.*
+
+```{r}
+
+rand_norms_categories <- cut(rand_norms, c(0, 80, 100, 120, Inf))
+
+```
+
+***
+
+*35. Show a table of frequencies of the number in each bin.*
+
+```{r}
+
+table(rand_norms_categories)
+
+```

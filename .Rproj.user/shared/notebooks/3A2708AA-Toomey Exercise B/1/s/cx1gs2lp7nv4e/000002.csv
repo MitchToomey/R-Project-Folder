@@ -1,0 +1,3 @@
+"0","#I created a new matrix with the bottom two rows of matrix a."
+"0",""
+"0","matrix_d <- matrix_a[-1,]"

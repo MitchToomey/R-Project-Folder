@@ -1,0 +1,7 @@
+"0",""
+"0","public_scores <- as.matrix(hsb2[hsb2$schtyp == 1, 7:11])"
+"0","rownames(public_scores) <- NULL"
+"0",""
+"0","private_scores <- as.matrix(hsb2[hsb2$schtyp == 2, 7:11])"
+"0","rownames(private_scores) <- NULL"
+"0",""

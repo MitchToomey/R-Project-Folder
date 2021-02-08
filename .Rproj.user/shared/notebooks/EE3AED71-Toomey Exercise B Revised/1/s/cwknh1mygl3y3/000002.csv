@@ -1,0 +1,3 @@
+"0","# I transposed the hsb2_matrix I created in step 19. "
+"0",""
+"0","hsb2_trans <- t(hsb2_matrix)"

@@ -1,0 +1,8 @@
+"0",""
+"0","school_scores <- array(c(as.vector(public_scores[1:25, ]),"
+"0","                       as.vector(private_scores[1:25, ])),"
+"0","                       dim = c(25, 5, 2),"
+"0","                       dimnames = list(NULL,"
+"0","                                       colnames(scores),"
+"0","                                       c(""public"", ""private"")))"
+"0",""

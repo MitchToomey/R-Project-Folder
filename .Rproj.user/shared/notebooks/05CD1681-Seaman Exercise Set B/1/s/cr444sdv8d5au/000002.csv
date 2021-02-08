@@ -1,0 +1,7 @@
+"0",""
+"0","student_class <- factor(rep(1:4, each = 5),"
+"0","                        labels = c(""freshman"","
+"0","                                   ""sophomore"","
+"0","                                   ""junior"","
+"0","                                   ""senior""))"
+"0",""

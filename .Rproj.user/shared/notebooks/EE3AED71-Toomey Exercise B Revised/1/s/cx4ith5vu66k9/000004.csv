@@ -1,0 +1,6 @@
+"0","hsb2 <- read.csv(here(""Data"", ""hsb2.csv""))"
+"0",""
+"0","hsb2_matrix <- matrix(c(hsb2$read, hsb2$write, hsb2$math, hsb2$science, hsb2$socst),"
+"0","                    ncol = 5)"
+"0",""
+"0","colnames(hsb2_matrix) <- c(""read"", ""write"", ""math"", ""science"", ""socst"")"
