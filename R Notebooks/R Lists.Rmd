@@ -1,0 +1,300 @@
+---
+title: "R Lists"
+author: "Michael A. Seaman"
+output: html_notebook
+---
+
+```{r include=FALSE}
+
+library(here)
+
+```
+
+
+A list is a vector of vectors that can be of different types and different
+lengths. Databases and research data sets almost always contain various types
+of data, so lists (and data frames, which are a special type of list) are
+the most common data structure for storing the set of data, as a whole. Even
+though we may take individual vectors out of the list for analysis, knowing
+how to create and then access elements of a list is vitally important to
+using R for research.
+
+
+### Creating Lists
+
+We can create lists by entering list data or by combining vectors. The vectors
+can be of different types and length. This makes lists ideal for storing
+output of functions, such as hypothesis testing functions, analysis of
+variance functions, linear models, and so on.
+
+```{r}
+
+# We can use the list function to create a list.
+
+our_course <- list("EDRM 718",
+                   c("Tuesday", "Thursday"),
+                   c("presentations", "writing scripts", "learning groups"),
+                   c(1:17),
+                   list(c("homework", "checkpoints", "exam"),
+                        c(50, 20, 30)))
+
+our_course
+
+# We can also do this with existing vectors.
+
+course_num <- "EDRM718"
+meeting_times <- c("Tuesday", "Thursday")
+activities <- c("presentations", "writing scripts", "learning groups")
+student_id <- 1:17
+graded_elements <- list(c("homework", "checkpoints", "exam"),
+                        c(50, 20, 30))
+
+our_course <- list(course_num,
+                   meeting_times,
+                   activities,
+                   student_id,
+                   graded_elements)
+
+our_course
+
+# List elements can be named with the names function.
+
+names(our_course) <- c("title",
+                       "days",
+                       "activities",
+                       "id",
+                       "grading")
+
+our_course
+
+# We can also name elements when we create the list.
+
+our_course <- list("title" = "EDRM 718",
+                   "days" = c("Tuesday",
+                              "Thursday"),
+                   "activities" = c("presentations",
+                                    "writing scripts",
+                                    "learning groups"),
+                   "id" = c(1:17),
+                   "grading" = list(c("homework", "checkpoints", "exam"),
+                                    c(50, 20, 30)))
+
+our_course
+
+# Let's look at the class and attributes.
+
+class(our_course)
+attributes(our_course)
+
+# Note that the attributes are themselves a list.
+
+our_course_attributes <- attributes(our_course)
+
+class(our_course_attributes)
+
+
+```
+
+
+### Subsetting and Extracting from Lists
+
+With the classes of objects that we have studied up to now, subsetting and
+extracting was the same thing. Not so with lists.
+
+```{r}
+
+# Elements of a list can be accessed by order number, just like vectors.
+
+our_course[1]
+
+our_course[3]
+
+our_course[5]
+
+# Not that what is actually being returned is a subset of a list, which
+# is also a list.
+
+our_activities <- our_course[3]
+
+our_activities
+
+class(our_activities)
+typeof(our_activities)
+
+# If we want to pull out a vector from the list, we can use the extraction
+# operator [[]]. This operator "digs into the list" and looks at content.
+
+our_activities <- our_course[[3]]
+
+our_activities
+
+class(our_activities)
+typeof(our_activities)
+
+# If the elements of the list are named, the $ operator serves the same
+# purpose as the extraction operator. The advantage of $ is brevity and
+# simplicity. The disadvantage is that the elements of the list must be
+# called by name. For example, you couldn't use $ in a for loop.
+
+our_activities <- our_course$activities
+
+our_activities
+
+class(our_activities)
+typeof(our_activities)
+
+# We can also use names with the [[]] operator.
+
+our_course[["activities"]]
+
+# Note the use of the extraction operator to obtain an element from our
+# list within a list.
+
+grading_percents <- our_course[[5]][[2]]
+
+grading_percents
+
+# Or alternatively like this.
+
+grading_percents <- our_course$grading[[2]]
+
+grading_percents
+
+# That raises a question. Can we name elements of a list within a list? Yes!
+
+names(our_course[[5]]) <- c("requirements", "percents")
+
+our_course$grading$requirements
+our_course$grading$percents
+
+# As with vectors, we can leave off a list item.
+
+our_course[-4]
+
+# Why doesn't this next one work? (Try typing it in the console.)
+
+# our_course[[-4]]
+
+# But this does!
+
+our_course[[4]][-3:-5]
+
+# We can use logicals to subset a list.
+
+our_course[c(TRUE, TRUE, FALSE, FALSE, TRUE)]
+
+```
+
+### Modifying a List
+
+We can modify elements of a list much like we can modify elements of other
+object classes. Keep in mind, however, that when we are modifying an element
+in a vector within the list, we need to modify using extraction operators.
+
+```{r}
+
+# We can modify by assigning new values, just as with a vector.
+
+our_course[1] <- "Research and R"
+
+our_course
+
+our_course$title <- "EDRM 718"
+
+our_course
+
+# Here we are changing a single element within a sub-list.
+
+our_course$grading$requirements[3] <- "final exam"
+
+our_course
+
+# We can add elements to a list.
+
+our_course$instructor <- "Mike Seaman"
+our_course$some_students <- c("Silvia", "Allison", "Hyunsu", "Lisa")
+
+our_course
+
+# We can delete list elements.
+
+our_course$instructor <- NULL
+
+our_course
+
+# Note that if we delete an element in the middle, elements below it assume
+# a new order in the list.
+
+our_course[5]
+
+our_course$id <- NULL
+
+our_course
+
+our_course[4]
+
+# We can merge lists.
+
+course_info <- list(semester = "Spring 2019",
+                    credits = 3,
+                    prerequisites = "Two semesters of statistics",
+                    variable.credit = FALSE)
+
+our_course <- c(our_course, course_info)
+
+our_course
+
+```
+
+
+### Basic List Functions
+
+Given the importance of lists to using R for conducting research, there are
+many, many functions for working with lists in Base R, and oodles more when
+we install packages. Here we will look at just a couple of functions to get a
+flavor for how functions with lists might work.
+
+```{r}
+
+# A list can be converted to a vector. Remember that vectors are atomic,
+# so various data types in the list will have to be coerced to other types.
+
+course_vector <- unlist(our_course)
+
+course_vector
+
+# We can view the structure of a list with the str function.
+
+str(our_course)
+
+# Data frames can be split into lists with the split function.
+
+# R has quite a few datasets built in. The creators of R must have realized
+# that statistics teachers would appreciate this! We can see the directory
+# of datasets. Try typing this function into the console.
+
+# data()
+
+# Let's use mtcars. Type this function into the console.
+
+# View(mtcars)
+
+# With the split function we can split a data frame into multiple data
+# frames that we store in a list. Let's split mtcars by the number of
+# cylinders in the engine.
+
+car_data <- split(mtcars, mtcars$cyl)
+
+str(car_data)
+
+# The lapply function let's us apply a function to elements of a list.
+
+lapply(car_data, function(x) mean(x$mpg))
+
+# We had to use this format because we can't take the mean of every element
+# in our list, such as character vectors. If we are using a function that
+# can be applied to every element in our list, we can simplify.
+
+lapply(car_data, attributes)
+
+```

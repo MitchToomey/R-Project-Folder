@@ -1,0 +1,386 @@
+---
+title: "R Data Frames"
+author: "Michael A. Seaman"
+output: html_notebook
+---
+
+```{r include=FALSE}
+
+library(here)
+
+```
+
+
+The data frame is the most common data structure for storing research data.
+You can think of a data frame as a spreadsheet. Each column is an atomic
+vector, but different columns can contain different types of data. Thus, a
+data frame is a special type of list in which each element (i.e., each
+column in our spreadsheet) is equal length.
+
+
+### Creating Data Frames
+
+We can create data frames by entering the data within our script, but it is
+far more common to read in the data using one of the read functions. You can
+also create data frames by binding vectors together into columns or rows.
+
+```{r include=FALSE}
+
+# We can use the data.frame function to create a data frame.
+
+my_data <- data.frame("ID" = 1:4,
+                      "Name" = c("Greg", "Sara", "Manuel", "Liz"),
+                      "Score" = c(23, 27, 26, 29))
+
+# Let's look at the characteristics of this data frame.
+
+class(my_data)
+attributes(my_data)
+str(my_data)
+
+# Data frame columns and rows must have names, so if you do not name them,
+# R will name them for you and it's not pretty!
+
+my_data <- data.frame(1:4,
+                      c("Greg", "Sara", "Manuel", "Liz"),
+                      c(23, 27, 26, 29))
+
+# Type this in the console:
+
+# View(my_data)
+
+# In some versions of R, character vectors are converted to factors. We can
+# suppress this with the stringsAsFactors argument.
+
+my_data <- data.frame("ID" = 1:4,
+                      "Name" = c("Greg", "Sara", "Manuel", "Liz"),
+                      "Score" = c(23, 27, 26, 29),
+                      stringsAsFactors = FALSE)
+
+str(my_data)
+
+# We could also create the vectors first and then combine into a data frame.
+
+ID <- 1:4
+Name <- c("Greg", "Sara", "Manuel", "Liz")
+Score <- c(23, 27, 26, 29)
+
+my_data <- data.frame(ID, Name, Score)
+
+str(my_data)
+
+# Another way to preserve the character vector, we can use the I() function.
+# In this context, "I" stands for "insulate". This prevents the character
+# vector from being changed to a factor both now and in any future functions.
+
+ID <- 1:4
+Name <- c("Greg", "Sara", "Manuel", "Liz")
+Score <- c(23, 27, 26, 29)
+
+my_data <- data.frame(ID, I(Name), Score)
+
+str(my_data)
+
+# Note that Name is now an "AsIs" character vector. This is part of the
+# object to tell any functions to leave this character vector as it is.
+
+class(my_data$Name)
+
+# The most common way to create a data frame is by reading it in from
+# an external file.
+
+Stat_Data <- read.csv(here("Data", "Statistics Class Data.csv"))
+
+str(Stat_Data)
+
+# To preserve character vectors with read.csv, regardless of R version, we can
+# again set the stringsAsFactors argument to FALSE.
+
+Stat_Data <- read.csv(here("Data", "Statistics Class Data.csv"),
+                      stringsAsFactors = FALSE)
+
+str(Stat_Data)
+
+# Columns can be added to a data frame by adding a named vector.
+
+my_data$Gender <- c("Male", "Female", "Male", "Female")
+
+# We can also add columns by putting them into a data frame and then
+# bind the two data frames together.
+
+new_vars <- data.frame("Age" = c(14, 13, 14, 14),
+                       "Transfer" = c(TRUE, FALSE, FALSE, FALSE))
+
+my_data <- cbind(my_data, new_vars)
+
+my_data
+
+# If we want to add rows to a data frame, we need to read those rows
+# into a data frame and then bind the two data frames together.
+
+new_data <- data.frame("ID" = 5:6,
+                       "Name" = c("Laura", "Patricia"),
+                       "Score" = c(28, 25),
+                       "Gender" = c("Female", "Female"),
+                       "Age" = c(14, 13),
+                       "Transfer" = c(TRUE, FALSE))
+
+my_data <- rbind(my_data, new_data)
+
+my_data
+
+# If we want to change column names, we can do this with the colnames
+# function.
+
+colnames(my_data) <- c("id", "name", "score", "gender", "age", "transfer")
+
+my_data
+
+# We can also use subsetting to change certain column names.
+
+colnames(my_data)[2] <- "first.name"
+
+my_data
+
+# We can change row names with the row.names function.
+
+row.names(my_data) <- c(101:106)
+
+my_data
+
+```
+
+
+### Subsetting Data Frames
+
+A data frame is a special type of list, so the methods that we learned for
+subsetting and extracting with a list work with a data frame. Additionally,
+because a data frame is rectangular, like a matrix, some of the matrix subset
+methods work as well.
+
+```{r}
+
+# Data frames can be subset like lists and matrices. Here's one column
+# obtain through subsetting multiple ways.
+
+my_data[,3]
+my_data[[3]]
+my_data$score
+
+# Here are two rows.
+
+my_data[2:3,]
+
+# Here are all the rows except the 2nd one.
+
+my_data[-2,]
+
+# Here are three columns and two rows.
+
+my_data[c(3,4), 2:4]
+
+# You can also subset with the subset function and a logical Boolean operator.
+
+my_data_females <- subset(my_data, gender == "Female")
+
+my_data_females
+
+```
+
+
+### Reviewing Data Frames
+
+Making certain that data frames contain exactly what they should and are in
+the structure that they should be in prior to analysis is an important step in
+the research process. We will look at a few of the functions that can assist
+with this process.
+
+```{r include=FALSE}
+
+# We already know about the structure function.
+
+str(Stat_Data)
+
+# We can summarize the data.
+
+summary(Stat_Data)
+
+summary(my_data)
+
+# We can make sure the data appears to be set up correctly by looking at
+# the first few elements.
+
+head(Stat_Data)
+
+# Or the last few.
+
+tail(Stat_Data)
+
+# Of course if the data set is not too large, we might want to look at the
+# entire thing! We can do this with the View() function. Try it!
+
+# View(Stat_Data)
+
+# The nrow and ncol functions will report the number of rows and columns.
+
+nrow(Stat_Data)
+ncol(Stat_Data)
+
+# Or we can use dim.
+
+dim(Stat_Data)
+
+```
+
+
+### Common Data Frame Functions
+
+As with lists, there are a huge number of functions to use with data frames.
+We will look at a small sampling of these.
+
+```{r}
+
+# Like matrices, data frames can be transposed.
+
+my_data
+t(my_data)
+
+# The aggregate function allows you to apply a function to subsets in your
+# data frame. Let's look at mean scores for males and females.
+
+aggregate(my_data[c("score", "age")], by = list(my_data$gender), FUN = mean)
+
+# Note that aggregate works on data frames and returns a data frame.
+
+my_data_means <- aggregate(my_data[c("score", "age")],
+                           by = list(my_data$gender),
+                           FUN = mean)
+
+my_data_means
+
+class(my_data_means)
+
+# Could I have used aggregate for the entire data set? Yes, if I don't
+# care about getting a bunch of warning messages for non-numeric data.
+
+aggregate(my_data, by = list(my_data$gender), FUN = mean)
+
+# Let's use the HSB2 data for a more complex example.
+
+hsb2 <- read.csv(here("Data", "hsb2.csv"))
+
+# Let's obtain test score means by both gender and type of school.
+
+aggregate(hsb2[7:11], by = list(hsb2$female, hsb2$schtyp), FUN = mean)
+
+# It doesn't have to be just for means!
+
+aggregate(hsb2[7:11], by = list(hsb2$female, hsb2$schtyp), FUN = fivenum)
+
+# The apply function will apply another function, provided as an argument
+# to the data frame.
+
+apply(hsb2, 2, median)
+
+# The apply function returns a vector, rather than a data frame.
+
+hsb2_medians <- apply(hsb2, 2, median)
+
+hsb2_medians
+
+class(hsb2_medians)
+
+# The "2" given as the second argument specified columns. A "1" would
+# give us row information.
+
+apply(hsb2, 1, median)
+
+# The lapply function is designed to work on lists, but will also work for
+# data frames because a data frame is a list of vectors of equal length.
+# Since it expects to apply the function to the elements of a list, we don't
+# need to specify whether to use columns or rows. It will only do this for
+# columns.
+
+lapply(hsb2, median)
+
+# Note that it returns a list.
+
+hsb2_median_list <- lapply(hsb2, median)
+
+class(hsb2_median_list)
+
+# If we want a vector instead, we can use sapply. This is like using apply,
+# except assuming a list, so no need to specify that we want to perform
+# the function on columns.
+
+hsb2_median_vector <- sapply(hsb2, median)
+
+hsb2_median_vector
+
+class(hsb2_median_vector)
+
+# We can dig deeper and break the analysis into pieces with tapply.
+# Let's suppose we want medians for reading by SES.
+
+tapply(hsb2$read, hsb2$ses, median)
+
+# If you want to cross tabulate for more than one variable, you can do it
+# using a list. Let's obtain medians for reading by SES and school type.
+
+tapply(hsb2$read, list(hsb2$schtyp, hsb2$ses), median)
+
+# Here's a function that you should avoid, but I want you to be aware that
+# it exists so that when you hear about it, you'll know to avoid it.
+
+attach(my_data)
+
+# Now everything we do assumes we are using my.data.
+
+first.name
+first.name[3:4]
+
+cbind(first.name, score)
+
+mean(score)
+
+# Let see why we should avoid attach. First, let's detach. 
+
+detach(my_data)
+
+# Now let's create a vector called score and calculate the mean.
+
+score <- c(125, 315, 282)
+mean(score)
+
+# Let's reattach my.data and calculate the mean of the score in my.data.
+
+attach(my_data)
+
+first.name
+mean(score)
+
+# R even warned us about this. We might think we are accessing score within
+# the my_data data frame, but we are not. This can lead to serious problems
+# if you are analyzing data to prepare a manuscript! If you look at the
+# Google R Style Manual, Google tells employees not to use attach. We won't
+# either. We need to end this potentially destructive attachment.
+
+detach(my_data)
+
+# There are alternatives. We already know that one alternative is to directly
+# reference a variable.
+
+mean(hsb2$read)
+
+# Another is to use the data frame as an argument, which is permitted by
+# some functions.
+
+lm(write ~ read, data = hsb2)
+
+# A third is to use the with function.
+
+with(hsb2, mean(read))
+
+with(hsb2, lm(write ~ read))
+
+```

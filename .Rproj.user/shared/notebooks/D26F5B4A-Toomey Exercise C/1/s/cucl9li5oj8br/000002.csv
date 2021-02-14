@@ -1,0 +1,7 @@
+"0",""
+"0","# creating a list"
+"0",""
+"0","my_courses <- list(c(""EDRM 718"", ""EDEX 809"", ""EDCE 825""),"
+"0","                   c(""Dr. Seaman, Dr. Wolfe"", ""Dr. Gold""),"
+"0","                   c(3, 3, 3))"
+"0",""

@@ -1,0 +1,213 @@
+---
+title: "R Functions"
+author: "Michael A. Seaman"
+output: html_notebook
+---
+
+```{r include=FALSE}
+
+library(here)
+
+```
+
+
+Functions are the workers in R. The purpose of a function is to perform a
+task that we are going to want to perform multiple times.
+
+
+### Basic Components of Functions
+
+Functions consist of a name, arguments, and the body of the function (which we
+cannot see when we call a function). Functions return an object of some
+class, but we often use the object directly rather than store it.
+
+```{r}
+
+# We will use the mean function as an example. We can learn about the mean
+# in the help section of R or by doing a web search on "R mean". The name
+# of the function is "mean".
+
+?mean
+
+# The mean is a function.
+
+class(mean)
+
+# Given that functions are objects, we can assign functions to other objects.
+
+super_duper_mean <- mean
+
+class(super_duper_mean)
+
+# There is one required argument. We must provide an object. The mean will
+# work on various types of objects. (Examples of this come later.)
+
+my_data <- c(2, 2, 3, 3, 4, 5, 7, 7, 9, 11)
+class(my_data)
+
+mean(my_data)
+super_duper_mean(my_data)
+
+# There are two optional arguments for the mean: trim and na.rm.
+
+# Let's use the mean function again, but this time trim the lowest and
+# highest 10% of the values.
+
+mean(my_data, 0.1)
+
+# Let's check what this is doing.
+
+mean(c(2, 3, 3, 4, 5, 7, 7, 9))
+
+# We can use argument names when we run the function. This is never a bad
+# idea because it helps document our code.
+
+mean(x = my_data, trim = 0.1)
+
+# This next example is not great practice, but it works. By convention, we
+# call mandatory arguments first, before optional arguments. As this example
+# illustrates, this is not required.
+
+mean(trim = 0.1, x = my_data)
+
+# Suppose we have some missing data.
+
+my_next_data <- c(2, 2, NA, 3, NA, 5, 7, 7, 9, 11)
+
+mean(my_next_data)
+
+# R tells us that we have some missing data. Here's how to solve the problem.
+
+mean(my_next_data, na.rm = TRUE)
+
+# documentation states that we can pass extra arguments that are not  needed
+# for the mean. (Note the ellipses or "three dots" in the documentation.) Let's
+# see what happens when we do that.
+
+mean(my_data, trim = 0, na.rm = TRUE, 7, FALSE)
+
+# Nothing happens! So why have three dots? Why allow extra arguments? Good
+# question! Let's explore this by looking at the body of the mean function.
+
+body(mean)
+
+# The mean function is very short. It calls the "UseMethod" function with a
+# "mean" argument. That tells us that the mean function has methods.
+
+methods(mean)
+
+# There are various functions that our mean function can call, depending on
+# the type of object we send to mean. These are called "methods. The
+# "UseMethod" function will look at the type of object we sent and then can
+# determine which mean function to call. When our object is either numeric or
+# logical, it will call mean.default.
+
+body(mean.default)
+
+# To look at using other methods, let's set up some dates. R has a date object!
+
+Valentines_Day <- as.Date("2021-2-14")
+St_Patricks_Day <- as.Date("2021-3-17")
+
+both_dates <- c(Valentines_Day, St_Patricks_Day)
+
+# Let's see what happens if we send both dates to the mean function.
+
+mean(both_dates)
+
+# The function "mean" has a method for dates that finds the middle date
+# between two dates. Cool! There are other methods for the mean, but we will
+# stop here after having looked at the default method and also a method for
+# working with dates. Now back to the three dots. Let's look at the arguments
+# listed for the mean.
+
+args(mean)
+
+# What? Only an object and the three dots? Yes! Remember that when we call the
+# mean function that it is checking what type of object we have before
+# deciding which mean method to use. If we send a numeric object, then it will
+# call mean.default.
+
+args(mean.default)
+
+# This function has three possible arguments. Thus, the three dots in the
+# original call to the mean allows for additional arguments, just in case the
+# method we end up calling has more arguments. Eureka! Three dots has (high)
+# value!
+
+# The final component of a function is what it returns.
+
+my_data_mean <- mean(my_data)
+
+class(my_data_mean)
+
+```
+
+
+### A Look at a Few Functions
+
+Let's see the usefulness of functions by looking at a few of them.
+
+```{r}
+
+MountJuniper_Data <- read.csv(here("Data",
+                                   "Mount Juniper Elementary Data.csv"),
+                              header = TRUE,
+                              sep = ",")
+
+# Let's take out names for security purposes
+
+New_MJ_Data <- MountJuniper_Data
+
+New_MJ_Data$First.Name <- NULL
+New_MJ_Data$Last.Name <- NULL
+
+# Let's also set grade level as a factor
+
+New_MJ_Data$Grade <- factor(New_MJ_Data$Grade)
+
+# Now let's save to a CSV file and an RData file.
+
+write.csv(New_MJ_Data,
+          here("Data", "Mount Juniper Elementary Data (no names).csv"))
+
+# Not quite what we wanted! Let's look at the arguments for this function.
+
+?write.csv
+
+write.csv(New_MJ_Data,
+          here("Data", "Mount Juniper Elementary Data (no names).csv"),
+          row.names = FALSE)
+
+save(New_MJ_Data,
+     file = here("Data", "Mount Juniper Elementary Data (no names).RData"))
+
+# Let's see why the "file =" is needed.
+
+?save
+
+# Let's look at our objects, clear the environment and load the data.
+
+ls()
+rm(list = ls())
+ls()
+
+load(here("Data", "Mount Juniper Elementary Data (no names).RData"))
+
+# Now let's look at side-by-side box plots for the scores, by grade.
+
+boxplot(New_MJ_Data$Score ~ New_MJ_Data$Grade)
+
+# We need axes labels. There are many additional arguments that we can
+# use to spiff this up.
+
+boxplot(New_MJ_Data$Score ~ New_MJ_Data$Grade,
+        names = c("Third", "Fourth", "Fifth"),
+        xlab = "Grade Level",
+        ylab = "Score",
+        main = "Scores at Mount Juniper Elementary by Grade Level",
+        border = "coral4",
+        col = c("cyan", "darkolivegreen4", "burlywood1"))
+
+```
+
