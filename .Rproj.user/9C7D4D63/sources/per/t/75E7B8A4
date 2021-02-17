@@ -1,9 +1,9 @@
 {
     "id": "75E7B8A4",
-    "path": "~/Documents/R Projects/R Class Project Folder/EDRM 718/Assignment 5/Toomey Exercise C.Rmd",
-    "project_path": "Assignment 5/Toomey Exercise C.Rmd",
+    "path": "~/Documents/R Projects/R Class Project Folder/EDRM 718/Assignment 5/Toomey Exercise C_Revised.Rmd",
+    "project_path": "Assignment 5/Toomey Exercise C_Revised.Rmd",
     "type": "r_markdown",
-    "hash": "2328856780",
+    "hash": "1753539640",
     "contents": "",
     "dirty": false,
     "created": 1612978913118.0,
@@ -12,16 +12,16 @@
     "properties": {
         "tempName": "Untitled1",
         "chunk_output_type": "inline",
-        "cursorPosition": "321,55",
-        "scrollLine": "304",
+        "cursorPosition": "68,0",
+        "scrollLine": "60",
         "docOutlineVisible": "0"
     },
     "folds": "",
-    "lastKnownWriteTime": 1613337689,
+    "lastKnownWriteTime": 1613572925,
     "encoding": "UTF-8",
     "collab_server": "",
     "source_window": "",
-    "last_content_update": 1613337689799,
+    "last_content_update": 1613572925664,
     "read_only": false,
     "read_only_alternatives": []
 }
