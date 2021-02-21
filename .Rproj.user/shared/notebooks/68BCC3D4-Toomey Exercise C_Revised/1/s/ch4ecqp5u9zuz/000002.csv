@@ -1,0 +1,41 @@
+"0","```r
+class_list <- list(\"Ali Alzughaibi\", \"Asiye Demir\", \"Bryan Terlizzi\",
+                   \"Cade Abrams\", \"Dana Sox\", \"Erin Wilson\", \"Geophrey Odero\",
+                   \"Hazza Bin-Hazza\", \"Hui Jiang\", \"Julie Wang\",
+                   \"Michael Seidman\", \"Mohammed Quasem\", \"Olivia Lewis\",
+                   \"Robyn Pernetti\", \"Ryan Dastrup\", \"Shelby Gonzales\",
+                   \"Talal Alshehri\", \"Charles Walters\")
+
+sample(class_list, 3)
+```"
+"1","[[1]]
+[1] \"Cade Abrams\"
+
+[[2]]
+[1] \"Asiye Demir\"
+
+[[3]]
+[1] \"Charles Walters\"
+"
+"0","```r
+learning_group <- data.frame(\"ID\" = 1:4,
+                      \"First Name\" = c(\"Hazza\", \"Olivia\", \"Cade\", \"Mitchell\"),
+                      \"Last Name\" = c(\"Bin-Hazza\", \"Lewis\", \"Abrams\", \"Toomey\"),
+                      \"Email\" = c(\"binhazza@email.sc.edu\", \"ojlewis@email.sc.edu\",
+                                  \"tcabrams@email.sc.edu\", \"tt12@email.sc.edu\"),
+                      \"Program of Study\" = c(\"Language and Literacy\", \"Counselor Education\",
+                                             \"Physical Education\", \"Counselor Education\"),
+                      \"Years in Program\" = c(\"2\", \"2\", \"2\",
+                                             \"2\"))
+
+full_name <- paste(learning_group$First.Name, learning_group$Last.Name, sep = \",\")
+
+learning_group <- cbind(learning_group, full_name)
+
+learning_group_new <- learning_group[, c(1, 2, 3, 7, 4, 5, 6)]
+
+# Creating a logical variable if the learning group members are in their programs
+# for more than two years.
+
+learning_group_new$more.than.two.years <- learning_group_new$Years.in.Program >3
+```"

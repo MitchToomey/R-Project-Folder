@@ -1,0 +1,18 @@
+"0","```r
+
+# Store ANOVA in a separate object with the p-value extracted
+
+anova_results <- summary(anova_grade)[[1]][[1,5]]
+
+# not sure what the first 1 is, but the second 1,5 represents where the p-value
+# is located in the anova table
+
+# telling R to print not statistically significant if the p-value is > .05
+
+anova_results <- ifelse(anova_results > .05, 
+                                \"Not statistically significant\")
+
+print(anova_results)
+```"
+"1","[1] \"Not statistically significant\"
+"

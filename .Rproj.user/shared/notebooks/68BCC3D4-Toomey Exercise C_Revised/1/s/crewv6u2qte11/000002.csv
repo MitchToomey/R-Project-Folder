@@ -1,0 +1,12 @@
+"0","```r
+
+# Adding a \"results\" attribute to the anova grade object
+
+# I am using anova_grade as the object. I am not sure why exactly I use this
+# and not the anova_results object-- but the latter shows attributes as NULL.
+# I think because the anova_results object only has the sign. level in it.
+
+attributes(anova_grade)$Results<- ifelse(anova_results > .05, 
+                                \"Not statistically significant\")
+
+```"

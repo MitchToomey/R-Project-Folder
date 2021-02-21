@@ -1,0 +1,53 @@
+"0","```r
+
+# construct a vector of 9 different numbers between 0 and 100
+
+rand_nums <- sample(0:100, 9)
+
+# add two missing indicators to the vector
+
+rand_nums <- sample(append(rand_nums, NA))
+rand_nums <- sample(append(rand_nums, NA))
+
+
+# add infinity to the vector
+
+rand_nums <- sample(append(rand_nums, Inf))
+
+# Range function
+
+# find range and omit missing data
+
+range(rand_nums, na.rm = TRUE)
+```"
+"1","[1]   5 Inf
+"
+"0","```r
+# find range, omit random numbers, omit infinity
+
+range(rand_nums, na.rm = TRUE, finite = TRUE)
+```"
+"1","[1]  5 89
+"
+"0","```r
+# trimming random numbers
+
+x <- rnorm(100)
+range(x, trim = .10)
+```"
+"1","[1] -2.299152  3.002686
+"
+"0","```r
+z <- rnorm(3, 5, 20)
+range(z, robust = TRUE)
+```"
+"1","[1] -0.9544304  9.9315828
+"
+"0","```r
+#use character objects
+
+food <- (c(\"hamburger\", \"salad\", \"pizza\", \"french fries\"))
+range(food)
+```"
+"1","[1] \"french fries\" \"salad\"       
+"

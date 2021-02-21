@@ -1,0 +1,8 @@
+"0","```r
+
+# a. load the mount juniper data and put it in a data fram
+
+mount_juniper_data <- read.csv(here(\"Data\",\"Mount Juniper Elementary Data.csv\"))
+
+data.frame(mount_juniper_data)
+```"

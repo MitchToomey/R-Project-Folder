@@ -1,0 +1,24 @@
+"0","```r
+
+# b. check the score column to determine if there are missing data
+
+anyNA(mount_juniper_data$Score)
+```"
+"1","[1] TRUE
+"
+"0","```r
+# c. prints either \"there are no missing data\" or \"there are missing data\", 
+# depending on which is true
+
+# I created a vector to indicate any missing values, and if there were, told
+# it to display \"there are missing data\"
+
+mount_juniper_missing <- anyNA(mount_juniper_data$Score)
+
+mount_juniper_missing <- ifelse(mount_juniper_missing == TRUE, 
+                                \"There are missing data\")
+
+print(mount_juniper_missing)
+```"
+"1","[1] \"There are missing data\"
+"

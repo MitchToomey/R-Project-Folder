@@ -1,0 +1,9 @@
+"0","```r
+
+# creating a list
+
+my_courses <- list(c(\"EDRM 718\", \"EDEX 809\", \"EDCE 825\"),
+                   c(\"Dr. Seaman, Dr. Wolfe\", \"Dr. Gold\"),
+                   c(3, 3, 3))
+
+```"

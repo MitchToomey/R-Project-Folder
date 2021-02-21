@@ -1,0 +1,52 @@
+"0","```r
+
+hsb2 <- read.csv(here(\"Data\", \"hsb2.csv\"))
+
+ses_low <- subset(hsb2, hsb2$ses == 1)
+
+ses_middle <- subset(hsb2, hsb2$ses == 2)
+
+ses_high <- subset(hsb2, hsb2$ses == 3)
+
+ses_scores_low <- matrix(c(ses_low$read,                            
+                          ses_low$write,                            
+                          ses_low$math,                            
+                          ses_low$science,                            
+                          ses_low$socst),                        
+                          nrow = nrow(ses_low),                       
+                          ncol = 5)
+
+ses_scores_middle <- matrix(c(ses_middle$read,                            
+                          ses_middle$write,                            
+                          ses_middle$math,                            
+                          ses_middle$science,                            
+                          ses_middle$socst),                        
+                          nrow = nrow(ses_middle),                       
+                          ncol = 5)
+
+ses_scores_high <- matrix(c(ses_high$read,                            
+                          ses_high$write,                            
+                          ses_high$math,                            
+                          ses_high$science,                            
+                          ses_high$socst),                        
+                          nrow = nrow(ses_high),                       
+                          ncol = 5)
+
+ses_scores_list <- list(ses_scores_low, 
+                        ses_scores_middle, 
+                        ses_scores_high)
+
+
+names(ses_scores_list) <- c(\"SES_low\",
+                            \"SES_middle\",
+                            \"SES_high\")
+
+# plot and correlation for Low SES
+
+plot(x = ses_scores_list$SES_low[ , 1],
+     y = ses_scores_list$SES_low[ , 3],
+     main = paste(\"Plot of Reading score to Math Score for \",
+                  names(ses_scores_list[1])),
+     xlab = \"Reading Scores\",
+     ylab = \"Math Sores\")
+```"

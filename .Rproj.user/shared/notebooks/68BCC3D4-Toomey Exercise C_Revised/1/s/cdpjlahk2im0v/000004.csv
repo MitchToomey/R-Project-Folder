@@ -1,0 +1,17 @@
+"0","```r
+
+cor(x = ses_scores_list$SES_low[ , 1],
+    y = ses_scores_list$SES_low[ , 3])
+```"
+"1","[1] 0.6167167
+"
+"0","```r
+# plot and correlation for Middle SES
+
+plot(x = ses_scores_list$SES_middle[ , 1],
+     y = ses_scores_list$SES_middle[ , 3],
+     main = paste(\"Plot of Reading score to Math Score for \",
+                  names(ses_scores_list[2])),
+     xlab = \"Reading Scores\",
+     ylab = \"Math Sores\")
+```"

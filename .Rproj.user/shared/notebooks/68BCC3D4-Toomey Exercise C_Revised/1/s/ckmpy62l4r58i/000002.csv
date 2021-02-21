@@ -1,0 +1,25 @@
+"0","```r
+
+# Remove missing data
+mount_juniper_data <- na.omit(mount_juniper_data)
+
+# Coerce grade to factor
+juniper_grade <- factor(mount_juniper_data$Grade,
+                        levels = c(3, 4, 5),
+                        labels = c(\"Grade 3\", \"Grade 4\", \"Grade 5\"),
+                        ordered = FALSE)
+
+anova_grade <- aov(mount_juniper_data$Score ~ juniper_grade, 
+                      data = mount_juniper_data)
+
+summary(anova_grade)
+```"
+"1","               Df Sum Sq Mean Sq F value Pr(>F)
+juniper_grade   2    433   216.7    1.92   0.15
+Residuals     180  20317   112.9               
+"
+"0","```r
+# Not sure if my \"anova grade\" object and summary function fulfill the 
+# first part for problem 6 too
+
+```"
