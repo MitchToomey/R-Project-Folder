@@ -16,19 +16,14 @@ library(here)
 
 mt_juniper_data <- read.csv(here("Data", "Mount Juniper Elementary Data.csv"))
 
-mt_juniper_data <- data.frame(mt_juniper_data)
-
-# Checks score column to determine if there are missing data
-
-anyNA(mt_juniper_data$Score)
-
 # prints either there are no missing data or there are missing data, 
 # depending on which is true
 
 mt_juniper_missing <- anyNA(mt_juniper_data$Score)
 
-mt_juniper_missing <- ifelse(mt_juniper_missing == TRUE, 
-                                "There are missing data")
+mt_juniper_missing <- ifelse(mt_juniper_missing, 
+                                "There are missing data", 
+                             "There are no missing data")
 
 print(mt_juniper_missing)
 ```
@@ -46,14 +41,9 @@ juniper_grade <- factor(mt_juniper_data$Grade,
 anova_grade <- aov(mt_juniper_data$Score ~ juniper_grade, 
                       data = mt_juniper_data)
 
-summary(anova_grade)
-
 # Store ANOVA in a separate object with the p-value extracted
 
-anova_results <- summary(anova_grade)[[1]][[1,5]]
-
-# not sure what the first 1 is, but the second 1,5 represents where the p-value
-# is located in the anova table
+anova_results <- summary(anova_grade)[[1]][[1, 5]]
 
 # telling R to print not statistically significant if the p-value is > .05
 
@@ -92,7 +82,7 @@ norm_pop <- replicate(1000, sample(rnorm(1000, 100, 15), size = 40))
 
 # Calculate and store each mean in a vector of means
 
-norm_pop_means <- mean(norm_pop)
+norm_pop_means <- colMeans(norm_pop)
 
 # Calculate the mean of the sample means
 
@@ -104,6 +94,7 @@ mean_of_means <- mean(norm_pop_means)
 mean_of_means - 100
 
 # meaning there is no real difference between the true mean and the sample mean
+# this is an unbiased statistic 
 ```
 
 ### 5 
@@ -152,12 +143,14 @@ the message by pasting together the characters in every 8th position
 (i.e., positions 8, 16, 24, and 32) on all 23 rows
 
 ```{r}
-secret_code <- read.csv(here("Data", "Secret Code.csv"), header = FALSE, sep = ",")
+secret_code <- read.csv(here("Data", "Secret Code.csv"), header = FALSE)
 
 secret_message <- NULL
 
-for(i in secret_code[c(8, 16, 24, 32)]) {
-  secret_message <- paste(secret_message, i, sep = "") 
+for (i in 1:23) {
+  for(j in c(8, 16, 24, 32)) {
+    secret_message <- paste(secret_message, secret_code[i, j], sep = "") 
+  }
 }
 
 secret_message
