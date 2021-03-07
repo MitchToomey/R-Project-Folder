@@ -1,0 +1,89 @@
+---
+title: "Project B"
+author: "Mitchell Toomey"
+date: "February 26, 2021"
+output: html_notebook
+---
+
+### 2
+
+Write a function that has a single argument that is a data frame of raters (in columns) and their observation scores (in rows). The function should return a well-labeled data frame with all other raters (note that a single percent agreement is among two raters, so a separate percent agreement needs to be calculated for a rater with each other rater). These should be the mean of the percent agreement (PA) statistic, the SD of PA, and the minimum and maximum PA
+
+```{r}
+
+rater_agreement_function <- function(my_dataframe){
+
+  num_raters <- ncol(my_dataframe)        # number of raters in columns
+  num_observations <- nrow(my_dataframe)  # number of observations in rows
+
+  for(i in 1: num_raters - 1) {           # Calculate PA among two raters 
+    for (j in i+1: num_raters){
+                  if (i != j) {
+              a <- data[, i]              # all rows, but only select columns
+              b <- data[, j]              # all rows, but only select columns
+
+              rater_agreement <- sum(a == b)          # counting trues bt raters
+              percent_agreement <- (sum(a == b)/ 
+                                      length(a))* 100 # calculate percent
+                                                      # agree bt trues
+                  } else {NULL}
+    }
+  }
+}
+    PA <- matrix(percent, nrow= R, ncol= R)   
+    
+    Mean <- NULL
+    SD <- NULL
+    Min <- NULL
+    Max <- NULL
+   
+    for (k in 1:ncol(PA)){                  # Looking through columns and calculating 
+                                            # stats
+      Mean <- c(Mean, round(mean(PA[, k]), 2))
+      SD <- c(SD, round(sd(PA[,k]),2))
+      Min <- c(Min, round(min(PA[,k]),2))
+      Max <- c(Max, round(max(PA[,k]),2))
+    }
+   
+    df <- data.frame(rbind(Mean, SD, Min, Max)) #Combining stats into dataframe
+    colnames(df) <- names(data)
+    print(df)
+ 
+library(here)
+raters <- read.csv(here("Data", "Music Performance Data.csv"))
+rater_data(raters[2:9])
+
+```
+
+### 3
+
+Write a function that takes two arguments. The first is a data frame of raters (in columns) and their observation scores (in rows). The second is a matrix with two columns in which each row specifies the lowest and highest scores that should be collapsed to form a new category. The function should return a data frame of raters and their scores based on the newly formed categories
+
+```{r}
+
+# Write function with two arguments
+
+  # argument 1: Create a data frame
+    # raters in columns
+    # observation scores  in rows
+  
+
+  # argument 2: Create a matrix with two columns
+    # column 1: lowest scores collapsed into --> category 1
+    # column 2: highest scores collapsed into --> category 2
+
+  # return a data frame
+    # raters in columns
+    # new observation scores recoded into 2 categories
+
+num_raters <- ncol(my_dataframe)
+num_observations <- nrow(my_dataframe)
+
+
+collapse_matrix <- matrix(c(1, 2, 4, 4, 5, 6),  
+                          ncol = 2,
+                          byrow = TRUE)
+
+
+```
+

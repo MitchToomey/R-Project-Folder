@@ -1,0 +1,657 @@
+---
+title: "R User-Defined Functions"
+author: "Michael A. Seaman"
+output: html_notebook
+---
+
+R functions provide the work in R. They are the doers. Though there are
+thousands of functions to choose from, this is still not enough. Sometimes
+there is a section of code that we will use over and over. Such a code section
+is a good candidate to become a function. By developing our own user-defined
+functions, we can add to our function library and increase the power of our
+implementation of R in a way that meets our needs.
+
+```{r}
+
+library(here)
+
+```
+
+
+### Constructing Functions
+
+To create our own function, we need a name, arguments, body, and a return
+value.
+
+```{r}
+
+# Here is an example of a function. This is a silly function that squares
+# a number and adds five.
+
+square_plus_five <- function (x) {
+
+  our_result <- x^2 + 5
+  
+  return(our_result)
+}
+
+# Now that our function has been defined, let's try calling it.
+
+square_plus_five(7)
+
+# The function is already vectorized!
+
+my_vector <- c(3, 7, 11, 21)
+
+square_plus_five(my_vector)
+
+# I believe that an explicit return() function helps the readability of
+# code so that you should use it, but it isn't necessary. If there is no
+# return function, R will return the last element that is evaluated in
+# the function.
+
+square_plus_five <- function (x) {
+  x^2 + 5
+}
+
+square_plus_five(7)
+
+# Let's make another function that is a little more general. For this one
+# we send it a vector and also tell it how much to add after squaring.
+
+square_plus <- function (x, y) {
+  
+  our_result <- x^2 + y
+  
+  return(our_result)
+}
+
+# Let's send our vector again, but this time we can add 15 with our new
+# function. Notice that we can assign the result to an object.
+
+my_funny_stuff <- square_plus(my_vector, 15)
+my_funny_stuff
+
+# What if we only sent one value to our new function. Try typing this:
+
+# my_funny_stuff <- square_plus(my_vector)
+
+# As the error message states, we are missing an argument that does not
+# have a default. Let's set one up so that if no second argument is
+# included, it will not add anything.
+
+square_plus <- function (x, y = 0) {
+  
+  our_result <- x^2 + y
+  
+  return(our_result)
+}
+
+# Now this function call works!
+
+my_funny_stuff <- square_plus(my_vector)
+my_funny_stuff
+
+my_funny_stuff <- square_plus(my_vector, 15)
+my_funny_stuff
+
+# What if we give it too many arguments? Try typing in this next line.
+
+# my_funny_stuff <- square_plus(my_vector, 15, 45)
+
+# That's a problem. If there is a reason to pass through additional arguments,
+# we can use the three dots.
+
+square_plus <- function (x, y = 0, ...) {
+  
+  our_result <- x^2 + y
+  
+  return(our_result)
+}
+
+# Now this works. Note that the 45 is totally ignored.
+
+my_funny_stuff <- square_plus(my_vector, 15, 45)
+my_funny_stuff
+
+# So why would we want to include the three dots? We do this if there is any
+# chance that inside our function we might want to do something with another
+# function. Let's look at an example. Here's a function that will create a
+# scatterplot and return the correlation. Let's include three dots.
+
+corr_plot <- function (x, y, ...){
+  
+  plot(x, y, ...)
+  
+  corr_xy <- cor(x, y)
+  
+  return(corr_xy)
+}
+
+# Now let's create two vectors and call this function.
+
+explan_var <- c(15, 21, 17, 19, 32, 23, 25, 29, 20, 21)
+respon_var <- c(90, 92, 88, 84, 110, 99, 105, 104, 98, 111)
+
+corr_plot(explan_var, respon_var)
+
+
+# Suppose I decide to send some additional arguments for the plot
+# that is inside the function. I can do it!
+
+corr_plot(explan_var,
+          respon_var,
+          xlab = "Explanatory Variable",
+          ylab = "Response Variable",
+          col = "red")
+
+```
+
+
+### Environments
+
+An environment is a space where everything is stored. Normally we are working
+in the global environment. There are other environments, including the
+environments of packages that contain functions we may not be using in our
+current global environment. Functions also create environments.
+
+```{r}
+
+# Let's look at the environment of a function. Most variables are in the
+# global environment, such as these variables.
+
+my_var1 <- 20
+my_var2 <- 30
+
+# We can look at the environment.
+
+environment()
+
+# Now let's create a function.
+
+add_15 <- function (x) {
+    y <- x + 15
+  
+# While I'm in this function I'm going to set variables with the same
+# names as those above and print them.
+  
+    my_var1 <- 100
+    my_var2 <- 200
+  
+    print(my_var1)
+    print(my_var2)
+  
+# And let's look at the environment while we are here.
+  
+    print(environment())
+  
+    return(y)
+}
+
+# Now let's call that function.
+
+my_new_num <- add_15(50)
+my_new_num
+
+# Let's see the value of our two variables.
+
+my_var1
+my_var2
+
+# When a variable name is used, R will first look in the current environment.
+# If it does not find it, R will look at the next level up, and so on.
+
+triple_add_five <- function (x) {
+  
+  # Let's include two nonsense variables in this function.
+  
+  a <- 10
+  b <- 20
+  
+  # Now we'll create a function within a function that triples a value.
+  
+  triple <- function (y) {
+    
+    # We will reset one of our nonsense variables.
+    
+    a <- 100
+    
+    # Let's print both a and b.
+    
+    print(a)
+    print(b)
+    
+    z <- 3*y
+    return(z)
+  }
+  
+  # Now let's print a and b again.
+  
+  print(a)
+  print(b)
+  
+  z <- triple(x) + 5
+  return(z)
+  
+}
+
+# Let's call this function to triple and add 5 to the number 50. Notice that
+# the triple function is not in our environment pane. That's because we are
+# looking at the global environment.
+
+triple_add_five(50)
+
+```
+
+
+### Using Functions
+
+We write functions when we want to have a script available for use over and
+over again without having to copy in the entire script each time. The examples
+above were kept simple (and silly) to introduce the concept of functions. Now
+it is time to look at a more useful, but necessarily more complex, user-defined
+function.
+
+```{r}
+
+# Here's a bit more complex (and practical!) function just to show what
+# a longer function might look like. This function will calculate the
+# power or sample size for a one-sided binomial test.
+
+# The arguments are a null hypothesized value, an alternative hypothesized
+# value, sample size or power, an indicator of whether this is sample size
+# or power, and a confidence level.
+
+binom_up_pow <- function(null_value,
+                         alt_value,
+                         samp_pow,
+                         samp_size = TRUE,
+                         conf_lev = 0.95) {
+
+  # Here is a function within the function to calculate power from sample
+  # size.
+  
+  get_power <- function(nv,av,sp, cl){
+    cv <- qbinom(1-cl, sp, nv, lower.tail = FALSE) + 1
+    pow <- 1 - pbinom(cv - 1, sp, av)
+  }
+  
+  # Here is a function within the function to calculate sample size for
+  # desired power.
+  
+  get_samp_size <- function (nv, av, sp, cl){
+    n <- 10
+    temp_power <- 0
+    
+    while (temp_power < sp){
+      temp_power <- get_power(nv, av, n, cl)
+      n <- n+1
+    }
+    
+    return(n-1)
+  }
+  
+  if (samp_size)
+    result <- get_power(null_value, alt_value, samp_pow, conf_lev)
+  else
+    result <- get_samp_size(null_value, alt_value, samp_pow, conf_lev)
+  
+  return(result)
+}
+
+# Let's try calling this function with a couple sample sizes.
+
+binom_up_pow(.5, .8, 40)
+binom_up_pow(.5, .6, 40)
+
+# Let's try calling this function for desired power.
+
+binom_up_pow(.5, .8, .80, samp_size = FALSE)
+binom_up_pow(.5, .6, .80, samp_size = FALSE)
+
+# Now a quick check.
+
+binom_up_pow(.5, .6, 158)
+
+```
+
+
+### Sourcing Functions
+
+Let's clean up our code by copying the above function to a separate script
+file. We'll access this function by using the *source()* function at the top
+of our main script or notebook.
+
+
+### Special Functions
+
+Special functions have a different form than the usual function name and
+arguments format. Base R has quite a few special functions, such as arithmetic
+operators, but users can also create special functions. Types of special
+functions include *infix* operators and replacement functions.
+
+```{r}
+
+# Most functions in R are prefix operators, meaning that the function name
+# precedes the arguments. We can create infix operators by enclosing in %%.
+
+# Let's create an infix operator that pastes two strings together.
+
+'%+%' <- function (a, b) {
+  
+  new_string <- paste(a, b)
+  return(new_string)
+}
+
+# Now let's try it.
+
+"Abraham" %+% "Lincoln"
+
+# Note that infix functions can be called just like prefix functions.
+
+'%+%'("Abraham", "Lincoln")
+
+# This is true even with built-in infix functions.
+
+'*'(2, 4)
+
+# Replacement functions are used to modify a value within an object.
+# Here's a function to replace the first two values of a vector with
+# some number that we hand to the function.  I don't know why we need this,
+# other than to demonstrate replacement functions!
+
+'change_first_second<-' <- function(x, value) {
+  x[1:2] <- value
+  return(x)
+}
+
+# Let's create a vector and call the function. Note that the call is
+# a bit different.
+
+my_vector <- 50:60
+my_vector
+
+change_first_second(my_vector) <- 20
+my_vector
+
+# Remember that everything that happens in R is a function. What we just
+# learned is that when we replace values through subsetting, we are just
+# using a base R replacement function!
+
+my_vector[1] <- 10
+my_vector
+
+```
+
+
+### Function Error Checking
+
+We are well aware from previous experiences that we can make errors when we
+call a function. It should be no surprise that we can also make errors when we
+call our own functions. If we share our functions with others, then others can
+make errors when they call our functions. Here are some examples and
+considerations for anticipating that users will make errors.
+
+```{r}
+
+# Let's create a function with a purposeful error built in. This function
+# will add five to any number less than 10. If the number is 10 or greater,
+# then it will add "a", which of course is nonsense.
+
+add_five_or_a <- function (x) {
+  
+  if (x < 10)
+    return(x + 5)
+  else
+    return(x + "a")
+}
+
+# Let's call this with a number less than 10.
+
+add_five_or_a(8)
+
+# Now try typing this with a number greater than 10.
+
+# add_five_or_a(12)
+
+# Notice that we only obtained an error on the second function call. That is
+# because R uses lazy evaluation.
+
+# It is good practice to insulate users from errors. When a user provides
+# a function input that is in error, we should tell them in a way that
+# they will understand. That is especially true if we are going to give
+# our functions to others to use in their scripts. Unfortunately, many
+# R coders who share their code don't do this, so we end up with error
+# messages that are difficult to interpret.
+
+# Here's a function that will create a scatterplot and return the
+# correlation. Note the error checking that can catch a couple of the
+# more likely errors.
+
+cor_plot <- function(x, y, ...){
+  
+  if (!(is.numeric(x) & is.numeric(y))){
+    print("Use only numeric variables when calling cor_plot")
+    return(NULL)
+  }
+  
+  if (!(length(x) == length(y))) {
+    print("Make sure your vectors are the same length when calling cor_plot")  
+    return(NULL)
+  }
+  
+  plot(x, y, ...)
+  return(cor(x, y))
+}
+
+# Let's call it correctly first.
+
+my_vector_1 <- c(2, 4, 6, 8, 10, 12, 14, 16)
+my_vector_2 <- c(5, 1, 9, 3, 8, 7, 4, 6)
+
+cor_plot(my_vector_1,
+         my_vector_2,
+         xlab = "My First Vector",
+         ylab = "My Second Vector")
+
+# Now let's create some problems.
+
+my_vector_1 <- c("a", "b", "C")
+
+cor_plot(my_vector_1,
+         my_vector_2,
+         xlab = "My First Vector",
+         ylab = "My Second Vector")
+
+my_vector_1 <- c(2, 4, 6, 8, 10, 12, 14)
+
+cor_plot(my_vector_1,
+         my_vector_2,
+         xlab = "My First Vector",
+         ylab = "My Second Vector")
+
+# Let's comment out our error messages and see what would have happened.
+
+cor_plot <- function(x, y, ...){
+  
+  #  if (!(is.numeric(x) & is.numeric(y))){
+  #    print("Use only numeric variables when calling cor.plot")
+  #    return(NULL)
+  #  }
+  
+  #  if (!(length(x) == length(y))) {
+  #    print("Make sure your vectors are the same length when calling cor.plot")  
+  #    return(NULL)
+  #  }
+  
+  plot(x, y, ...)
+  return(cor(x, y))
+}
+
+my_vector_1 <- c("a", "b", "C")
+
+# Try typing in this:
+
+#cor_plot(my_vector_1,
+#         my_vector_2,
+#         xlab = "My First Vector",
+#         ylab = "My Second Vector")
+
+my_vector_1 <- c(2, 4, 6, 8, 10, 12, 14)
+
+# Try it again:
+
+# cor_plot(my_vector_1,
+#          my_vector_2,
+#          xlab = "My First Vector",
+#          ylab = "My Second Vector")
+
+# These are not as nice!
+
+```
+
+
+### Viewing Function Code
+
+Sometimes we want to view the code for functions that we wrote to understand
+why it may not be doing what we anticipated, or to consider improving or
+adding to our function. We can do this without going to the source file. We
+can also look at functions written by others, including Base R functions, to
+see how they work and perhaps get insights for our own script writing. Another
+reason to view code written by others is because we want to copy it so that we
+can change or add to it.
+
+```{r}
+
+# We can view the code for a function by using the function name.
+
+square_plus
+
+# Let's look at the code for t.test
+
+t.test
+
+# This tells us that it is going to send all of our parameters to a particular
+# t.test method. Let's see what methods there are for the t.test.
+
+methods(t.test)
+
+# So let's try looking at the default t.test method. Type this:
+
+# t.test.default
+
+# Only t.test is loaded into our environment, not t.test.default. Notice
+# that it is in the stats package. Let's see if it can be exported from that
+# package. Try this:
+
+# stats::t.test.default
+
+# Nope. So it is internal to the stats package. Let's retrieve it.
+
+stats:::t.test.default
+
+# We can also use the getAnywhere() function.
+
+getAnywhere(t.test.default)
+
+# Let's get the code for the standard deviation.
+
+sd
+
+# That's simple! Notice all it does is take the square root of the variance.
+# Let's look at the variance function.
+
+var
+
+# The var function is calling a covariance function named C_cov, and it is
+# using the .Call function. This tells me that it is compiled code. If I
+# want to see the source, I'll have to look elsewhere.
+
+# Let's look at an example of how we can use the source code to do what we
+# want to do.
+
+# Look at the output from the TukeyHSD function.
+
+hsb2 <- read.csv(here("Data", "hsb2.csv"))
+
+hsb2$ses <- factor(hsb2$ses,
+                   levels = c(1:3),
+                   labels = c("low", "middle", "high"))
+
+model <- aov(hsb2$math ~ hsb2$ses)
+
+results <- TukeyHSD(model)
+plot(results)
+
+# That's not a very good title! Let's look at the function. This is coming
+# from the plot function, so I wonder if it has a special method for Tukey.
+
+methods(plot)
+
+# Here it is!
+
+getAnywhere(plot.TukeyHSD)
+
+# Let's look it over.
+
+function (x, ...) 
+{
+  for (i in seq_along(x)) {
+    xi <- x[[i]][, -4L, drop = FALSE]
+    yvals <- nrow(xi):1L
+    dev.hold()
+    on.exit(dev.flush())
+    plot(c(xi[, "lwr"], xi[, "upr"]), rep.int(yvals, 2L), 
+         type = "n", axes = FALSE, xlab = "", ylab = "", main = NULL, 
+         ...)
+    axis(1, ...)
+    axis(2, at = nrow(xi):1, labels = dimnames(xi)[[1L]], 
+         srt = 0, ...)
+    abline(h = yvals, lty = 1, lwd = 0.5, col = "lightgray")
+    abline(v = 0, lty = 2, lwd = 0.5, ...)
+    segments(xi[, "lwr"], yvals, xi[, "upr"], yvals, ...)
+    segments(as.vector(xi), rep.int(yvals - 0.1, 3L), as.vector(xi), 
+             rep.int(yvals + 0.1, 3L), ...)
+    title(main = paste0(format(100 * attr(x, "conf.level"), 
+                               digits = 2L), "% family-wise confidence level\n"), 
+          xlab = paste("Differences in mean levels of", names(x)[i]))
+    box()
+    dev.flush()
+    on.exit()
+  }
+}
+
+# What if we edit this by putting in a title argument and them replacing
+# the one that is the default.
+
+new.plot.TukeyHSD <- function (x, new.title, ...) 
+{
+  for (i in seq_along(x)) {
+    xi <- x[[i]][, -4L, drop = FALSE]
+    yvals <- nrow(xi):1L
+    dev.hold()
+    on.exit(dev.flush())
+    plot(c(xi[, "lwr"], xi[, "upr"]), rep.int(yvals, 2L), 
+         type = "n", axes = FALSE, xlab = "", ylab = "", main = NULL, 
+         ...)
+    axis(1, ...)
+    axis(2, at = nrow(xi):1, labels = dimnames(xi)[[1L]], 
+         srt = 0, ...)
+    abline(h = yvals, lty = 1, lwd = 0.5, col = "lightgray")
+    abline(v = 0, lty = 2, lwd = 0.5, ...)
+    segments(xi[, "lwr"], yvals, xi[, "upr"], yvals, ...)
+    segments(as.vector(xi), rep.int(yvals - 0.1, 3L), as.vector(xi), 
+             rep.int(yvals + 0.1, 3L), ...)
+    title(main = new.title, 
+          xlab = paste("Differences in mean levels of", names(x)[i]))
+    box()
+    dev.flush()
+    on.exit()
+  }
+}
+
+# Now let's try it.
+
+new.plot.TukeyHSD(results, new.title = "Tukey Confidence Intervals")
+
+```
