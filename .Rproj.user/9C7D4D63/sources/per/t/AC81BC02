@@ -3,7 +3,7 @@
     "path": "~/Documents/R Projects/R Class Project Folder/EDRM 718/Assignment 7/Toomey_Project B.Rmd",
     "project_path": "Assignment 7/Toomey_Project B.Rmd",
     "type": "r_markdown",
-    "hash": "3481324678",
+    "hash": "803872091",
     "contents": "",
     "dirty": false,
     "created": 1614363675912.0,
@@ -12,15 +12,15 @@
     "properties": {
         "tempName": "Untitled1",
         "chunk_output_type": "inline",
-        "cursorPosition": "86,0",
-        "scrollLine": "0"
+        "cursorPosition": "71,59",
+        "scrollLine": "61"
     },
     "folds": "",
-    "lastKnownWriteTime": 1615156594,
+    "lastKnownWriteTime": 1615161188,
     "encoding": "UTF-8",
     "collab_server": "",
     "source_window": "",
-    "last_content_update": 1615156594836,
+    "last_content_update": 1615161188174,
     "read_only": false,
     "read_only_alternatives": []
 }

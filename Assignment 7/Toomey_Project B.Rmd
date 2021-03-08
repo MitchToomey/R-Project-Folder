@@ -11,46 +11,47 @@ Write a function that has a single argument that is a data frame of raters (in c
 
 ```{r}
 
-rater_agreement_function <- function(my_dataframe){
-
-  num_raters <- ncol(my_dataframe)        # number of raters in columns
-  num_observations <- nrow(my_dataframe)  # number of observations in rows
-
-  for(i in 1: num_raters - 1) {           # Calculate PA among two raters 
-    for (j in i+1: num_raters){
-                  if (i != j) {
-              a <- data[, i]              # all rows, but only select columns
-              b <- data[, j]              # all rows, but only select columns
-
-              rater_agreement <- sum(a == b)          # counting trues bt raters
-              percent_agreement <- (sum(a == b)/ 
-                                      length(a))* 100 # calculate percent
-                                                      # agree bt trues
-                  } else {NULL}
+ rater_data <- function(data) 
+   {
+   N = nrow(data)
+   R = ncol(data)
+   
+   counts <- NULL
+   
+   for(i in 1:(R-1)){
+     for (j in (i+1):R){
+           if (i != j) {  
+             
+             a <- data[, i]
+             b <- data[, j]
+             counts <- c(counts, sum(a == b))  
+             percent <- (counts/length(a))*100  
+                                               
+      } else {NULL}
     }
   }
-}
-    PA <- matrix(percent, nrow= R, ncol= R)   
-    
-    Mean <- NULL
-    SD <- NULL
-    Min <- NULL
-    Max <- NULL
    
-    for (k in 1:ncol(PA)){                  # Looking through columns and calculating 
-                                            # stats
-      Mean <- c(Mean, round(mean(PA[, k]), 2))
-      SD <- c(SD, round(sd(PA[,k]),2))
-      Min <- c(Min, round(min(PA[,k]),2))
-      Max <- c(Max, round(max(PA[,k]),2))
-    }
+   PA <- matrix(percent, nrow= R, ncol= R)   
+                                             
+   Mean <- NULL
+   SD <- NULL
+   Min <- NULL
+   Max <- NULL
    
-    df <- data.frame(rbind(Mean, SD, Min, Max)) #Combining stats into dataframe
-    colnames(df) <- names(data)
-    print(df)
+   for (k in 1:ncol(PA)){                     
+                                             
+     Mean <- c(Mean, round(mean(PA[, k]), 2))
+     SD <- c(SD, round(sd(PA[,k]),2))
+     Min <- c(Min, round(min(PA[,k]),2))
+     Max <- c(Max, round(max(PA[,k]),2))
+  }
+   df <- data.frame(rbind(Mean, SD, Min, Max)) 
+   colnames(df) <- names(data)
+   print(df)
+ }
  
 library(here)
-raters <- read.csv(here("Data", "Music Performance Data.csv"))
+raters <- read.csv(here("Data", "raters.csv"))
 rater_data(raters[2:9])
 
 ```
@@ -67,14 +68,13 @@ Write a function that takes two arguments. The first is a data frame of raters (
     # raters in columns
     # observation scores  in rows
   
-
   # argument 2: Create a matrix with two columns
     # column 1: lowest scores collapsed into --> category 1
     # column 2: highest scores collapsed into --> category 2
 
-  # return a data frame
-    # raters in columns
-    # new observation scores recoded into 2 categories
+# return a data frame
+  # raters in columns
+  # new observation scores recoded into 2 categories
 
 num_raters <- ncol(my_dataframe)
 num_observations <- nrow(my_dataframe)

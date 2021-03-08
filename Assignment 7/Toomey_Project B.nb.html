@@ -1768,51 +1768,20 @@ summary {
 <p>Write a function that has a single argument that is a data frame of raters (in columns) and their observation scores (in rows). The function should return a well-labeled data frame with all other raters (note that a single percent agreement is among two raters, so a separate percent agreement needs to be calculated for a rater with each other rater). These should be the mean of the percent agreement (PA) statistic, the SD of PA, and the minimum and maximum PA</p>
 <!-- rnb-text-end -->
 <!-- rnb-chunk-begin -->
-<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuXG5yYXRlcl9hZ3JlZW1lbnRfZnVuY3Rpb24gPC0gZnVuY3Rpb24obXlfZGF0YWZyYW1lKXtcblxuICBudW1fcmF0ZXJzIDwtIG5jb2wobXlfZGF0YWZyYW1lKSAgICAgICAgIyBudW1iZXIgb2YgcmF0ZXJzIGluIGNvbHVtbnNcbiAgbnVtX29ic2VydmF0aW9ucyA8LSBucm93KG15X2RhdGFmcmFtZSkgICMgbnVtYmVyIG9mIG9ic2VydmF0aW9ucyBpbiByb3dzXG5cbiAgZm9yKGkgaW4gMTogbnVtX3JhdGVycyAtIDEpIHsgICAgICAgICAgICMgQ2FsY3VsYXRlIFBBIGFtb25nIHR3byByYXRlcnMgXG4gICAgZm9yIChqIGluIGkrMTogbnVtX3JhdGVycyl7XG4gICAgICAgICAgICAgICAgICBpZiAoaSAhPSBqKSB7XG4gICAgICAgICAgICAgIGEgPC0gZGF0YVssIGldICAgICAgICAgICAgICAjIGFsbCByb3dzLCBidXQgb25seSBzZWxlY3QgY29sdW1uc1xuICAgICAgICAgICAgICBiIDwtIGRhdGFbLCBqXSAgICAgICAgICAgICAgIyBhbGwgcm93cywgYnV0IG9ubHkgc2VsZWN0IGNvbHVtbnNcblxuICAgICAgICAgICAgICByYXRlcl9hZ3JlZW1lbnQgPC0gc3VtKGEgPT0gYikgICAgICAgICAgIyBjb3VudGluZyB0cnVlcyBidCByYXRlcnNcbiAgICAgICAgICAgICAgcGVyY2VudF9hZ3JlZW1lbnQgPC0gKHN1bShhID09IGIpLyBcbiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgbGVuZ3RoKGEpKSogMTAwICMgY2FsY3VsYXRlIHBlcmNlbnRcbiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICMgYWdyZWUgYnQgdHJ1ZXNcbiAgICAgICAgICAgICAgICAgIH0gZWxzZSB7TlVMTH1cbiAgICB9XG4gIH1cbn1cbiAgICBQQSA8LSBtYXRyaXgocGVyY2VudCwgbnJvdz0gUiwgbmNvbD0gUikgICBcbiAgICBcbiAgICBNZWFuIDwtIE5VTExcbiAgICBTRCA8LSBOVUxMXG4gICAgTWluIDwtIE5VTExcbiAgICBNYXggPC0gTlVMTFxuICAgXG4gICAgZm9yIChrIGluIDE6bmNvbChQQSkpeyAgICAgICAgICAgICAgICAgICMgTG9va2luZyB0aHJvdWdoIGNvbHVtbnMgYW5kIGNhbGN1bGF0aW5nIFxuICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAjIHN0YXRzXG4gICAgICBNZWFuIDwtIGMoTWVhbiwgcm91bmQobWVhbihQQVssIGtdKSwgMikpXG4gICAgICBTRCA8LSBjKFNELCByb3VuZChzZChQQVssa10pLDIpKVxuICAgICAgTWluIDwtIGMoTWluLCByb3VuZChtaW4oUEFbLGtdKSwyKSlcbiAgICAgIE1heCA8LSBjKE1heCwgcm91bmQobWF4KFBBWyxrXSksMikpXG4gICAgfVxuICAgXG4gICAgZGYgPC0gZGF0YS5mcmFtZShyYmluZChNZWFuLCBTRCwgTWluLCBNYXgpKSAjQ29tYmluaW5nIHN0YXRzIGludG8gZGF0YWZyYW1lXG4gICAgY29sbmFtZXMoZGYpIDwtIG5hbWVzKGRhdGEpXG4gICAgcHJpbnQoZGYpXG4gXG5saWJyYXJ5KGhlcmUpXG5yYXRlcnMgPC0gcmVhZC5jc3YoaGVyZShcIkRhdGFcIiwgXCJNdXNpYyBQZXJmb3JtYW5jZSBEYXRhLmNzdlwiKSlcbnJhdGVyX2RhdGEocmF0ZXJzWzI6OV0pXG5cbmBgYCJ9 -->
-<pre class="r"><code>
-rater_agreement_function &lt;- function(my_dataframe){
-
-  num_raters &lt;- ncol(my_dataframe)        # number of raters in columns
-  num_observations &lt;- nrow(my_dataframe)  # number of observations in rows
-
-  for(i in 1: num_raters - 1) {           # Calculate PA among two raters 
-    for (j in i+1: num_raters){
-                  if (i != j) {
-              a &lt;- data[, i]              # all rows, but only select columns
-              b &lt;- data[, j]              # all rows, but only select columns
-
-              rater_agreement &lt;- sum(a == b)          # counting trues bt raters
-              percent_agreement &lt;- (sum(a == b)/ 
-                                      length(a))* 100 # calculate percent
-                                                      # agree bt trues
-                  } else {NULL}
-    }
-  }
-}
-    PA &lt;- matrix(percent, nrow= R, ncol= R)   
-    
-    Mean &lt;- NULL
-    SD &lt;- NULL
-    Min &lt;- NULL
-    Max &lt;- NULL
-   
-    for (k in 1:ncol(PA)){                  # Looking through columns and calculating 
-                                            # stats
-      Mean &lt;- c(Mean, round(mean(PA[, k]), 2))
-      SD &lt;- c(SD, round(sd(PA[,k]),2))
-      Min &lt;- c(Min, round(min(PA[,k]),2))
-      Max &lt;- c(Max, round(max(PA[,k]),2))
-    }
-   
-    df &lt;- data.frame(rbind(Mean, SD, Min, Max)) #Combining stats into dataframe
-    colnames(df) &lt;- names(data)
-    print(df)
- 
-library(here)
-raters &lt;- read.csv(here(&quot;Data&quot;, &quot;Music Performance Data.csv&quot;))
-rater_data(raters[2:9])
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxucmF0ZXJfZGF0YShyYXRlcnNbMjo5XSlcblxuYGBgIn0= -->
+<pre class="r"><code>rater_data(raters[2:9])
 </code></pre>
 <!-- rnb-source-end -->
+<!-- rnb-output-begin eyJkYXRhIjoiZGF0YSBsZW5ndGggWzI4XSBpcyBub3QgYSBzdWItbXVsdGlwbGUgb3IgbXVsdGlwbGUgb2YgdGhlIG51bWJlciBvZiByb3dzIFs4XVxuIn0= -->
+<pre><code>data length [28] is not a sub-multiple or multiple of the number of rows [8]</code></pre>
+<!-- rnb-output-end -->
+<!-- rnb-frame-begin eyJtZXRhZGF0YSI6eyJjbGFzc2VzIjpbImRhdGEuZnJhbWUiXSwibnJvdyI6NCwibmNvbCI6OH0sInJkZiI6Ikg0c0lBQUFBQUFBQUF3dHlpVERtaXVCaVlHQmdabUFCWW1aV0lKT0JOVFRFVGRlQ2dZR0ZDY2hoQkVwd2d1Z0tvQ0poSUlNRGlQbUFtTVhCSzd0VmJrZmdHd2R6YlFpdHBDZFM5ZEI5blVPUTNvN0ExNjN5Y0hWT0IwQ21NamlZcUtXQmdJT1FNUmc0K0hhRDljSFZXVEpBMUJuOUFwb2lVczBBQlE2ZU1CYk12SEl1MjRMRjF4MU1McjRHR2hBRXQ5Y2Z3b2VyZytwek1Gdng5VkIvakNiY1hnejNRZldiekFPTDQzU2ZsZkoxb01WTEhJd2dOTng5M201Z2Z4RWZMaWdCeTVxWG1KdGFER1FJZ0FNWElzZ2VsRmlTV3FUbmlNcDFRdVU2bzNKZFVMbXVxRnczVks0N0t0Y0R6VkdjUmZubGVzZ09ZNEZLc1BpbUp1WkIyVXpCTUN1WmZUUHo0TXpFQ25RZkp1Y2tGc01NZ2dseXBTU1dKT3FsRlFIdEFQTCtvV2xoenk4b3ljelBBMnBpQXFVNVZqVE5qRVZvQWdLbGVTRFhwdWdtWjVUbVplc2FHWUZzQU10RE1DK1Vaa0ZpYzBEc1pQb1BOWXNWYWhaYmFsNTZabDRxelBFNWlVbXBPVkFPSHpCWXdLR2lWMUNVbVZjQzh3cFF0Rml2Skw4a0VhYU9LemsvQnlZQzloekRQd0FHTFAvZGF3TUFBQT09In0= -->
+<div data-pagedtable="false">
+<script data-pagedtable-source type="application/json">
+{"columns":[{"label":[""],"name":["_rn_"],"type":[""],"align":["left"]},{"label":["Rater.A"],"name":[1],"type":["dbl"],"align":["right"]},{"label":["Rater.B"],"name":[2],"type":["dbl"],"align":["right"]},{"label":["Rater.C"],"name":[3],"type":["dbl"],"align":["right"]},{"label":["Rater.D"],"name":[4],"type":["dbl"],"align":["right"]},{"label":["Rater.E"],"name":[5],"type":["dbl"],"align":["right"]},{"label":["Rater.F"],"name":[6],"type":["dbl"],"align":["right"]},{"label":["Rater.G"],"name":[7],"type":["dbl"],"align":["right"]},{"label":["Rater.H"],"name":[8],"type":["dbl"],"align":["right"]}],"data":[{"1":"52.84","2":"37.50","3":"25.00","4":"36.93","5":"50.00","6":"36.36","7":"26.14","8":"52.84","_rn_":"Mean"},{"1":"23.17","2":"20.15","3":"18.98","4":"20.82","5":"22.66","6":"20.62","7":"18.14","8":"23.17","_rn_":"SD"},{"1":"9.09","2":"4.55","3":"0.00","4":"9.09","5":"4.55","6":"4.55","7":"0.00","8":"9.09","_rn_":"Min"},{"1":"72.73","2":"59.09","3":"50.00","4":"63.64","5":"72.73","6":"59.09","7":"54.55","8":"72.73","_rn_":"Max"}],"options":{"columns":{"min":{},"max":[10],"total":[8]},"rows":{"min":[10],"max":[10],"total":[4]},"pages":{}}}
+  </script>
+</div>
+<!-- rnb-frame-end -->
 <!-- rnb-chunk-end -->
 <!-- rnb-text-begin -->
 </div>
@@ -1821,7 +1790,7 @@ rater_data(raters[2:9])
 <p>Write a function that takes two arguments. The first is a data frame of raters (in columns) and their observation scores (in rows). The second is a matrix with two columns in which each row specifies the lowest and highest scores that should be collapsed to form a new category. The function should return a data frame of raters and their scores based on the newly formed categories</p>
 <!-- rnb-text-end -->
 <!-- rnb-chunk-begin -->
-<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuXG4jIFdyaXRlIGZ1bmN0aW9uIHdpdGggdHdvIGFyZ3VtZW50c1xuXG4gICMgYXJndW1lbnQgMTogQ3JlYXRlIGEgZGF0YSBmcmFtZVxuICAgICMgcmF0ZXJzIGluIGNvbHVtbnNcbiAgICAjIG9ic2VydmF0aW9uIHNjb3JlcyAgaW4gcm93c1xuICBcblxuICAjIGFyZ3VtZW50IDI6IENyZWF0ZSBhIG1hdHJpeCB3aXRoIHR3byBjb2x1bW5zXG4gICAgIyBjb2x1bW4gMTogbG93ZXN0IHNjb3JlcyBjb2xsYXBzZWQgaW50byAtLT4gY2F0ZWdvcnkgMVxuICAgICMgY29sdW1uIDI6IGhpZ2hlc3Qgc2NvcmVzIGNvbGxhcHNlZCBpbnRvIC0tPiBjYXRlZ29yeSAyXG5cbiAgIyByZXR1cm4gYSBkYXRhIGZyYW1lXG4gICAgIyByYXRlcnMgaW4gY29sdW1uc1xuICAgICMgbmV3IG9ic2VydmF0aW9uIHNjb3JlcyByZWNvZGVkIGludG8gMiBjYXRlZ29yaWVzXG5cbm51bV9yYXRlcnMgPC0gbmNvbChteV9kYXRhZnJhbWUpXG5udW1fb2JzZXJ2YXRpb25zIDwtIG5yb3cobXlfZGF0YWZyYW1lKVxuXG5cbmNvbGxhcHNlX21hdHJpeCA8LSBtYXRyaXgoYygxLCAyLCA0LCA0LCA1LCA2KSwgIFxuICAgICAgICAgICAgICAgICAgICAgICAgICBuY29sID0gMixcbiAgICAgICAgICAgICAgICAgICAgICAgICAgYnlyb3cgPSBUUlVFKVxuXG5cbmBgYCJ9 -->
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuXG4jIFdyaXRlIGZ1bmN0aW9uIHdpdGggdHdvIGFyZ3VtZW50c1xuXG4gICMgYXJndW1lbnQgMTogQ3JlYXRlIGEgZGF0YSBmcmFtZVxuICAgICMgcmF0ZXJzIGluIGNvbHVtbnNcbiAgICAjIG9ic2VydmF0aW9uIHNjb3JlcyAgaW4gcm93c1xuICBcbiAgIyBhcmd1bWVudCAyOiBDcmVhdGUgYSBtYXRyaXggd2l0aCB0d28gY29sdW1uc1xuICAgICMgY29sdW1uIDE6IGxvd2VzdCBzY29yZXMgY29sbGFwc2VkIGludG8gLS0+IGNhdGVnb3J5IDFcbiAgICAjIGNvbHVtbiAyOiBoaWdoZXN0IHNjb3JlcyBjb2xsYXBzZWQgaW50byAtLT4gY2F0ZWdvcnkgMlxuXG4jIHJldHVybiBhIGRhdGEgZnJhbWVcbiAgIyByYXRlcnMgaW4gY29sdW1uc1xuICAjIG5ldyBvYnNlcnZhdGlvbiBzY29yZXMgcmVjb2RlZCBpbnRvIDIgY2F0ZWdvcmllc1xuXG5udW1fcmF0ZXJzIDwtIG5jb2wobXlfZGF0YWZyYW1lKVxubnVtX29ic2VydmF0aW9ucyA8LSBucm93KG15X2RhdGFmcmFtZSlcblxuXG5jb2xsYXBzZV9tYXRyaXggPC0gbWF0cml4KGMoMSwgMiwgNCwgNCwgNSwgNiksICBcbiAgICAgICAgICAgICAgICAgICAgICAgICAgbmNvbCA9IDIsXG4gICAgICAgICAgICAgICAgICAgICAgICAgIGJ5cm93ID0gVFJVRSlcblxuXG5gYGAifQ== -->
 <pre class="r"><code>
 # Write function with two arguments
 
@@ -1829,14 +1798,13 @@ rater_data(raters[2:9])
     # raters in columns
     # observation scores  in rows
   
-
   # argument 2: Create a matrix with two columns
     # column 1: lowest scores collapsed into --&gt; category 1
     # column 2: highest scores collapsed into --&gt; category 2
 
-  # return a data frame
-    # raters in columns
-    # new observation scores recoded into 2 categories
+# return a data frame
+  # raters in columns
+  # new observation scores recoded into 2 categories
 
 num_raters &lt;- ncol(my_dataframe)
 num_observations &lt;- nrow(my_dataframe)
@@ -1852,7 +1820,7 @@ collapse_matrix &lt;- matrix(c(1, 2, 4, 4, 5, 6),
 <!-- rnb-text-end -->
 </div>
 
-<div id="rmd-source-code">LS0tCnRpdGxlOiAiUHJvamVjdCBCIgphdXRob3I6ICJNaXRjaGVsbCBUb29tZXkiCmRhdGU6ICJGZWJydWFyeSAyNiwgMjAyMSIKb3V0cHV0OiBodG1sX25vdGVib29rCi0tLQoKIyMjIDIKCldyaXRlIGEgZnVuY3Rpb24gdGhhdCBoYXMgYSBzaW5nbGUgYXJndW1lbnQgdGhhdCBpcyBhIGRhdGEgZnJhbWUgb2YgcmF0ZXJzIChpbiBjb2x1bW5zKSBhbmQgdGhlaXIgb2JzZXJ2YXRpb24gc2NvcmVzIChpbiByb3dzKS4gVGhlIGZ1bmN0aW9uIHNob3VsZCByZXR1cm4gYSB3ZWxsLWxhYmVsZWQgZGF0YSBmcmFtZSB3aXRoIGFsbCBvdGhlciByYXRlcnMgKG5vdGUgdGhhdCBhIHNpbmdsZSBwZXJjZW50IGFncmVlbWVudCBpcyBhbW9uZyB0d28gcmF0ZXJzLCBzbyBhIHNlcGFyYXRlIHBlcmNlbnQgYWdyZWVtZW50IG5lZWRzIHRvIGJlIGNhbGN1bGF0ZWQgZm9yIGEgcmF0ZXIgd2l0aCBlYWNoIG90aGVyIHJhdGVyKS4gVGhlc2Ugc2hvdWxkIGJlIHRoZSBtZWFuIG9mIHRoZSBwZXJjZW50IGFncmVlbWVudCAoUEEpIHN0YXRpc3RpYywgdGhlIFNEIG9mIFBBLCBhbmQgdGhlIG1pbmltdW0gYW5kIG1heGltdW0gUEEKCmBgYHtyfQoKcmF0ZXJfYWdyZWVtZW50X2Z1bmN0aW9uIDwtIGZ1bmN0aW9uKG15X2RhdGFmcmFtZSl7CgogIG51bV9yYXRlcnMgPC0gbmNvbChteV9kYXRhZnJhbWUpICAgICAgICAjIG51bWJlciBvZiByYXRlcnMgaW4gY29sdW1ucwogIG51bV9vYnNlcnZhdGlvbnMgPC0gbnJvdyhteV9kYXRhZnJhbWUpICAjIG51bWJlciBvZiBvYnNlcnZhdGlvbnMgaW4gcm93cwoKICBmb3IoaSBpbiAxOiBudW1fcmF0ZXJzIC0gMSkgeyAgICAgICAgICAgIyBDYWxjdWxhdGUgUEEgYW1vbmcgdHdvIHJhdGVycyAKICAgIGZvciAoaiBpbiBpKzE6IG51bV9yYXRlcnMpewogICAgICAgICAgICAgICAgICBpZiAoaSAhPSBqKSB7CiAgICAgICAgICAgICAgYSA8LSBkYXRhWywgaV0gICAgICAgICAgICAgICMgYWxsIHJvd3MsIGJ1dCBvbmx5IHNlbGVjdCBjb2x1bW5zCiAgICAgICAgICAgICAgYiA8LSBkYXRhWywgal0gICAgICAgICAgICAgICMgYWxsIHJvd3MsIGJ1dCBvbmx5IHNlbGVjdCBjb2x1bW5zCgogICAgICAgICAgICAgIHJhdGVyX2FncmVlbWVudCA8LSBzdW0oYSA9PSBiKSAgICAgICAgICAjIGNvdW50aW5nIHRydWVzIGJ0IHJhdGVycwogICAgICAgICAgICAgIHBlcmNlbnRfYWdyZWVtZW50IDwtIChzdW0oYSA9PSBiKS8gCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgbGVuZ3RoKGEpKSogMTAwICMgY2FsY3VsYXRlIHBlcmNlbnQKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIyBhZ3JlZSBidCB0cnVlcwogICAgICAgICAgICAgICAgICB9IGVsc2Uge05VTEx9CiAgICB9CiAgfQp9CiAgICBQQSA8LSBtYXRyaXgocGVyY2VudCwgbnJvdz0gUiwgbmNvbD0gUikgICAKICAgIAogICAgTWVhbiA8LSBOVUxMCiAgICBTRCA8LSBOVUxMCiAgICBNaW4gPC0gTlVMTAogICAgTWF4IDwtIE5VTEwKICAgCiAgICBmb3IgKGsgaW4gMTpuY29sKFBBKSl7ICAgICAgICAgICAgICAgICAgIyBMb29raW5nIHRocm91Z2ggY29sdW1ucyBhbmQgY2FsY3VsYXRpbmcgCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIyBzdGF0cwogICAgICBNZWFuIDwtIGMoTWVhbiwgcm91bmQobWVhbihQQVssIGtdKSwgMikpCiAgICAgIFNEIDwtIGMoU0QsIHJvdW5kKHNkKFBBWyxrXSksMikpCiAgICAgIE1pbiA8LSBjKE1pbiwgcm91bmQobWluKFBBWyxrXSksMikpCiAgICAgIE1heCA8LSBjKE1heCwgcm91bmQobWF4KFBBWyxrXSksMikpCiAgICB9CiAgIAogICAgZGYgPC0gZGF0YS5mcmFtZShyYmluZChNZWFuLCBTRCwgTWluLCBNYXgpKSAjQ29tYmluaW5nIHN0YXRzIGludG8gZGF0YWZyYW1lCiAgICBjb2xuYW1lcyhkZikgPC0gbmFtZXMoZGF0YSkKICAgIHByaW50KGRmKQogCmxpYnJhcnkoaGVyZSkKcmF0ZXJzIDwtIHJlYWQuY3N2KGhlcmUoIkRhdGEiLCAiTXVzaWMgUGVyZm9ybWFuY2UgRGF0YS5jc3YiKSkKcmF0ZXJfZGF0YShyYXRlcnNbMjo5XSkKCmBgYAoKIyMjIDMKCldyaXRlIGEgZnVuY3Rpb24gdGhhdCB0YWtlcyB0d28gYXJndW1lbnRzLiBUaGUgZmlyc3QgaXMgYSBkYXRhIGZyYW1lIG9mIHJhdGVycyAoaW4gY29sdW1ucykgYW5kIHRoZWlyIG9ic2VydmF0aW9uIHNjb3JlcyAoaW4gcm93cykuIFRoZSBzZWNvbmQgaXMgYSBtYXRyaXggd2l0aCB0d28gY29sdW1ucyBpbiB3aGljaCBlYWNoIHJvdyBzcGVjaWZpZXMgdGhlIGxvd2VzdCBhbmQgaGlnaGVzdCBzY29yZXMgdGhhdCBzaG91bGQgYmUgY29sbGFwc2VkIHRvIGZvcm0gYSBuZXcgY2F0ZWdvcnkuIFRoZSBmdW5jdGlvbiBzaG91bGQgcmV0dXJuIGEgZGF0YSBmcmFtZSBvZiByYXRlcnMgYW5kIHRoZWlyIHNjb3JlcyBiYXNlZCBvbiB0aGUgbmV3bHkgZm9ybWVkIGNhdGVnb3JpZXMKCmBgYHtyfQoKIyBXcml0ZSBmdW5jdGlvbiB3aXRoIHR3byBhcmd1bWVudHMKCiAgIyBhcmd1bWVudCAxOiBDcmVhdGUgYSBkYXRhIGZyYW1lCiAgICAjIHJhdGVycyBpbiBjb2x1bW5zCiAgICAjIG9ic2VydmF0aW9uIHNjb3JlcyAgaW4gcm93cwogIAoKICAjIGFyZ3VtZW50IDI6IENyZWF0ZSBhIG1hdHJpeCB3aXRoIHR3byBjb2x1bW5zCiAgICAjIGNvbHVtbiAxOiBsb3dlc3Qgc2NvcmVzIGNvbGxhcHNlZCBpbnRvIC0tPiBjYXRlZ29yeSAxCiAgICAjIGNvbHVtbiAyOiBoaWdoZXN0IHNjb3JlcyBjb2xsYXBzZWQgaW50byAtLT4gY2F0ZWdvcnkgMgoKICAjIHJldHVybiBhIGRhdGEgZnJhbWUKICAgICMgcmF0ZXJzIGluIGNvbHVtbnMKICAgICMgbmV3IG9ic2VydmF0aW9uIHNjb3JlcyByZWNvZGVkIGludG8gMiBjYXRlZ29yaWVzCgpudW1fcmF0ZXJzIDwtIG5jb2wobXlfZGF0YWZyYW1lKQpudW1fb2JzZXJ2YXRpb25zIDwtIG5yb3cobXlfZGF0YWZyYW1lKQoKCmNvbGxhcHNlX21hdHJpeCA8LSBtYXRyaXgoYygxLCAyLCA0LCA0LCA1LCA2KSwgIAogICAgICAgICAgICAgICAgICAgICAgICAgIG5jb2wgPSAyLAogICAgICAgICAgICAgICAgICAgICAgICAgIGJ5cm93ID0gVFJVRSkKCgpgYGAKCg==</div>
+<div id="rmd-source-code">LS0tCnRpdGxlOiAiUHJvamVjdCBCIgphdXRob3I6ICJNaXRjaGVsbCBUb29tZXkiCmRhdGU6ICJGZWJydWFyeSAyNiwgMjAyMSIKb3V0cHV0OiBodG1sX25vdGVib29rCi0tLQoKIyMjIDIKCldyaXRlIGEgZnVuY3Rpb24gdGhhdCBoYXMgYSBzaW5nbGUgYXJndW1lbnQgdGhhdCBpcyBhIGRhdGEgZnJhbWUgb2YgcmF0ZXJzIChpbiBjb2x1bW5zKSBhbmQgdGhlaXIgb2JzZXJ2YXRpb24gc2NvcmVzIChpbiByb3dzKS4gVGhlIGZ1bmN0aW9uIHNob3VsZCByZXR1cm4gYSB3ZWxsLWxhYmVsZWQgZGF0YSBmcmFtZSB3aXRoIGFsbCBvdGhlciByYXRlcnMgKG5vdGUgdGhhdCBhIHNpbmdsZSBwZXJjZW50IGFncmVlbWVudCBpcyBhbW9uZyB0d28gcmF0ZXJzLCBzbyBhIHNlcGFyYXRlIHBlcmNlbnQgYWdyZWVtZW50IG5lZWRzIHRvIGJlIGNhbGN1bGF0ZWQgZm9yIGEgcmF0ZXIgd2l0aCBlYWNoIG90aGVyIHJhdGVyKS4gVGhlc2Ugc2hvdWxkIGJlIHRoZSBtZWFuIG9mIHRoZSBwZXJjZW50IGFncmVlbWVudCAoUEEpIHN0YXRpc3RpYywgdGhlIFNEIG9mIFBBLCBhbmQgdGhlIG1pbmltdW0gYW5kIG1heGltdW0gUEEKCmBgYHtyfQoKIHJhdGVyX2RhdGEgPC0gZnVuY3Rpb24oZGF0YSkgCiAgIHsKICAgTiA9IG5yb3coZGF0YSkKICAgUiA9IG5jb2woZGF0YSkKICAgCiAgIGNvdW50cyA8LSBOVUxMCiAgIAogICBmb3IoaSBpbiAxOihSLTEpKXsKICAgICBmb3IgKGogaW4gKGkrMSk6Uil7CiAgICAgICAgICAgaWYgKGkgIT0gaikgeyAgCiAgICAgICAgICAgICAKICAgICAgICAgICAgIGEgPC0gZGF0YVssIGldCiAgICAgICAgICAgICBiIDwtIGRhdGFbLCBqXQogICAgICAgICAgICAgY291bnRzIDwtIGMoY291bnRzLCBzdW0oYSA9PSBiKSkgIAogICAgICAgICAgICAgcGVyY2VudCA8LSAoY291bnRzL2xlbmd0aChhKSkqMTAwICAKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAKICAgICAgfSBlbHNlIHtOVUxMfQogICAgfQogIH0KICAgCiAgIFBBIDwtIG1hdHJpeChwZXJjZW50LCBucm93PSBSLCBuY29sPSBSKSAgIAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAKICAgTWVhbiA8LSBOVUxMCiAgIFNEIDwtIE5VTEwKICAgTWluIDwtIE5VTEwKICAgTWF4IDwtIE5VTEwKICAgCiAgIGZvciAoayBpbiAxOm5jb2woUEEpKXsgICAgICAgICAgICAgICAgICAgICAKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgCiAgICAgTWVhbiA8LSBjKE1lYW4sIHJvdW5kKG1lYW4oUEFbLCBrXSksIDIpKQogICAgIFNEIDwtIGMoU0QsIHJvdW5kKHNkKFBBWyxrXSksMikpCiAgICAgTWluIDwtIGMoTWluLCByb3VuZChtaW4oUEFbLGtdKSwyKSkKICAgICBNYXggPC0gYyhNYXgsIHJvdW5kKG1heChQQVssa10pLDIpKQogIH0KICAgZGYgPC0gZGF0YS5mcmFtZShyYmluZChNZWFuLCBTRCwgTWluLCBNYXgpKSAKICAgY29sbmFtZXMoZGYpIDwtIG5hbWVzKGRhdGEpCiAgIHByaW50KGRmKQogfQogCmxpYnJhcnkoaGVyZSkKcmF0ZXJzIDwtIHJlYWQuY3N2KGhlcmUoIkRhdGEiLCAicmF0ZXJzLmNzdiIpKQpyYXRlcl9kYXRhKHJhdGVyc1syOjldKQoKYGBgCgojIyMgMwoKV3JpdGUgYSBmdW5jdGlvbiB0aGF0IHRha2VzIHR3byBhcmd1bWVudHMuIFRoZSBmaXJzdCBpcyBhIGRhdGEgZnJhbWUgb2YgcmF0ZXJzIChpbiBjb2x1bW5zKSBhbmQgdGhlaXIgb2JzZXJ2YXRpb24gc2NvcmVzIChpbiByb3dzKS4gVGhlIHNlY29uZCBpcyBhIG1hdHJpeCB3aXRoIHR3byBjb2x1bW5zIGluIHdoaWNoIGVhY2ggcm93IHNwZWNpZmllcyB0aGUgbG93ZXN0IGFuZCBoaWdoZXN0IHNjb3JlcyB0aGF0IHNob3VsZCBiZSBjb2xsYXBzZWQgdG8gZm9ybSBhIG5ldyBjYXRlZ29yeS4gVGhlIGZ1bmN0aW9uIHNob3VsZCByZXR1cm4gYSBkYXRhIGZyYW1lIG9mIHJhdGVycyBhbmQgdGhlaXIgc2NvcmVzIGJhc2VkIG9uIHRoZSBuZXdseSBmb3JtZWQgY2F0ZWdvcmllcwoKYGBge3J9CgojIFdyaXRlIGZ1bmN0aW9uIHdpdGggdHdvIGFyZ3VtZW50cwoKICAjIGFyZ3VtZW50IDE6IENyZWF0ZSBhIGRhdGEgZnJhbWUKICAgICMgcmF0ZXJzIGluIGNvbHVtbnMKICAgICMgb2JzZXJ2YXRpb24gc2NvcmVzICBpbiByb3dzCiAgCiAgIyBhcmd1bWVudCAyOiBDcmVhdGUgYSBtYXRyaXggd2l0aCB0d28gY29sdW1ucwogICAgIyBjb2x1bW4gMTogbG93ZXN0IHNjb3JlcyBjb2xsYXBzZWQgaW50byAtLT4gY2F0ZWdvcnkgMQogICAgIyBjb2x1bW4gMjogaGlnaGVzdCBzY29yZXMgY29sbGFwc2VkIGludG8gLS0+IGNhdGVnb3J5IDIKCiMgcmV0dXJuIGEgZGF0YSBmcmFtZQogICMgcmF0ZXJzIGluIGNvbHVtbnMKICAjIG5ldyBvYnNlcnZhdGlvbiBzY29yZXMgcmVjb2RlZCBpbnRvIDIgY2F0ZWdvcmllcwoKbnVtX3JhdGVycyA8LSBuY29sKG15X2RhdGFmcmFtZSkKbnVtX29ic2VydmF0aW9ucyA8LSBucm93KG15X2RhdGFmcmFtZSkKCgpjb2xsYXBzZV9tYXRyaXggPC0gbWF0cml4KGMoMSwgMiwgNCwgNCwgNSwgNiksICAKICAgICAgICAgICAgICAgICAgICAgICAgICBuY29sID0gMiwKICAgICAgICAgICAgICAgICAgICAgICAgICBieXJvdyA9IFRSVUUpCgoKYGBgCgo=</div>
 
 
 
