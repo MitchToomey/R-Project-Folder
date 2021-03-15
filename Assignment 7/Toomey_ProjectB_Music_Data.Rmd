@@ -1,0 +1,162 @@
+---
+title: "Music Performance Data"
+author: "Mitchell Toomey"
+date: "March 15, 2021"
+output: html_notebook
+---
+
+This notebook will examine the percent agreement between raters of a high school
+music competition. Based on the percent agreements between raters, we will then
+determine 1st place, 2nd place, and 3rd place winners for the music competition. 
+
+```{r include=FALSE}
+library(here)
+
+library(formattable)
+
+source(here("Functions", "Project B functions.R"))
+
+school_rating <- read.csv(here("Data", "Music Performance Data.csv"),
+                          row.names = "School")
+```
+
+#### Tables 1.1 and 1.2 examine the percent agreement and rank the winners based 
+#### only on the original dataset. 
+
+----
+
+#### Table 1.1. Percent Agreement Among Raters with Original Data
+
+```{r echo=FALSE}
+# study the consistency of raters using
+  # the original ratings
+
+  percent_agreement <- rate_my_data(school_rating)  
+
+  percent_agreement <- formattable(percent_agreement, 
+            align = c("l","c","c","c","c", "c", "c", "c", "c"))
+  
+  percent_agreement
+```
+We see there is some consistency in mean percent agreement between all the raters,
+except for rater e. The means for raters d and f are also low compared to other raters,
+though not as low as rater e. 
+
+
+#### Table 1.2. Ranking the Winners Based on Percent Agreement in the Original Dataset
+```{r echo=FALSE}
+final_decision <- final_decision(school_rating)
+
+  final_decision <- formattable(final_decision,
+                                align= c("l", "c"))
+
+  final_decision
+```
+We can see here that Bedford Falls High School takes first
+place, Pearl Bailey High School takes 2nd place, and Twin Peaks High School 
+takes 3rd place.
+
+-----
+
+#### Tables 2.1 and 2.2 examine the percent agreement and rank the winners after 
+#### collapsing the original rating scale into only three categories. 
+
+----
+
+#### Table 2.1. Percent Agreement Among Raters with Three Categories
+
+```{r echo=FALSE}
+# collapsing into three categories in groups of two
+
+  # Collapse into 3 Categories 
+
+  three_cats <- matrix(c(1, 2, 3, 4, 5, 6),
+               nrow = 3, 
+               byrow = TRUE) 
+
+  collapse_cats_3 <- collapsed(school_rating, three_cats)
+
+  # PA for three categories 
+
+  percent_agreement_3 <- rate_my_data(collapse_cats_3)
+
+  percent_agreement_3 <- formattable(percent_agreement_3, 
+            align =c("l","c","c","c","c", "c", "c", "c", "c"))
+
+  percent_agreement_3
+```
+
+We see there is more consistency in mean percent agreement between all the raters than
+in the original dataset, again, except for rater e.
+
+
+#### Table 2.2. Ranking the Winners Based on Percent Agreement in the Dataset with 
+#### Three Collapsed Categories
+```{r echo=FALSE}
+# Decision for 3 collapsed categories
+
+  three_data_decision <- final_decision(collapse_cats_3)
+
+  three_data_decision <- formattable(three_data_decision,
+                                align= c("l","c","c","c","c", "c", 
+                                         "c", "c", "c"))
+  three_data_decision
+```
+
+We can see from this table that the categories may be too collapsed to determine
+a clear winner. 
+
+----
+
+#### Tables 3.1 and 3.2 examine the percent agreement and rank the winners after 
+#### collapsing the original rating scale into five categories. 
+
+----
+
+#### Table 3.1. Percent Agreement Among Raters with Five Categories
+
+```{r echo=FALSE}
+# collapsing into five categories by collapsing somewhat weak and somewhat strong 
+  # categories into a single not weak or strong category
+
+  five_cats <- matrix(c(1, 1, 2, 2, 3, 4, 5, 5, 6, 6),
+                    nrow=5,
+                    byrow=TRUE)
+
+  five_cats_collapse <- collapsed(school_rating, five_cats)
+
+  five_cats_collapse <- formattable(five_cats_collapse, 
+                             align= c("l", "c", "c", "c", "c", "c"
+                                      ,"c","c", "c"))
+# PA for 5 Categories 
+
+  percent_agreement_5 <- rate_my_data(five_cats_collapse)
+
+  percent_agreement_5 <- formattable(percent_agreement_5, 
+            align =c("l","c","c","c","c", "c", "c", "c", "c"))
+
+  percent_agreement_5
+```
+We see here that the percent agreement between raters looks similar to the other
+two tables. Again, with rater e being significantly lower than all other raters. 
+
+#### Table 3.2. Ranking the Winners Based on Percent Agreement in the Dataset with 
+#### Five Collapsed Categories
+
+```{r echo=FALSE}
+# determine which orchestras win first, second, and third place
+
+  five_collapse_final <- final_decision(five_cats_collapse)
+
+  five_collapse_final <- formattable(five_collapse_final, 
+                                   align= c("l", "c", "c", "c", "c", "c"
+                                      ,"c","c", "c"))
+  five_collapse_final
+
+```
+
+We can see from the five category data that Bedford Falls High School takes first place, 
+Pearl Bailey High School takes 2nd place, and Twin Peaks High School takes 3rd place.
+This is consistent with the original dataset. However, the interrater agreement
+is much higher with five categories compared to the original dataset. 
+Thus, five categories may be most appropriate for the rankings of this music competition.

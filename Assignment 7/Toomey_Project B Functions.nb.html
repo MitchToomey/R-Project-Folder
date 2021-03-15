@@ -1765,32 +1765,67 @@ summary {
 <!-- rnb-text-begin -->
 <div id="section" class="section level3">
 <h3>2</h3>
+<p>My attempt at # 2, I don’t know that I am on the right track-using Dr. Seaman’s function</p>
 <p>Write a function that has a single argument that is a data frame of raters (in columns) and their observation scores (in rows). The function should return a well-labeled data frame with all other raters (note that a single percent agreement is among two raters, so a separate percent agreement needs to be calculated for a rater with each other rater). These should be the mean of the percent agreement (PA) statistic, the SD of PA, and the minimum and maximum PA</p>
 <!-- rnb-text-end -->
 <!-- rnb-chunk-begin -->
-<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxucmF0ZXJfZGF0YShyYXRlcnNbMjo5XSlcblxuYGBgIn0= -->
-<pre class="r"><code>rater_data(raters[2:9])
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuXG4gcmF0ZXJfZGF0YSA8LSBmdW5jdGlvbihkYXRhKSBcbiAgIHtcbiAgIE4gPSBucm93KGRhdGEpXG4gICBSID0gbmNvbChkYXRhKVxuICAgXG4gICBjb3VudHMgPC0gTlVMTFxuICAgXG4gICBmb3IoaSBpbiAxOihSLTEpKXtcbiAgICAgZm9yIChqIGluIChpKzEpOlIpe1xuICAgICAgICAgICBpZiAoaSAhPSBqKSB7ICBcbiAgICAgICAgICAgICBcbiAgICAgICAgICAgICBhIDwtIGRhdGFbLCBpXVxuICAgICAgICAgICAgIGIgPC0gZGF0YVssIGpdXG4gICAgICAgICAgICAgY291bnRzIDwtIGMoY291bnRzLCBzdW0oYSA9PSBiKSkgIFxuICAgICAgICAgICAgIHBlcmNlbnQgPC0gKGNvdW50cy9sZW5ndGgoYSkpKjEwMCAgXG4gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIFxuICAgICAgfSBlbHNlIHtOVUxMfVxuICAgIH1cbiAgfVxuICAgXG4gICBQQSA8LSBtYXRyaXgocGVyY2VudCwgbnJvdz0gUiwgbmNvbD0gUikgICBcbiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIFxuICAgTWVhbiA8LSBOVUxMXG4gICBTRCA8LSBOVUxMXG4gICBNaW4gPC0gTlVMTFxuICAgTWF4IDwtIE5VTExcbiAgIFxuICAgZm9yIChrIGluIDE6bmNvbChQQSkpeyAgICAgICAgICAgICAgICAgICAgIFxuICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgXG4gICAgIE1lYW4gPC0gYyhNZWFuLCByb3VuZChtZWFuKFBBWywga10pLCAyKSlcbiAgICAgU0QgPC0gYyhTRCwgcm91bmQoc2QoUEFbLGtdKSwyKSlcbiAgICAgTWluIDwtIGMoTWluLCByb3VuZChtaW4oUEFbLGtdKSwyKSlcbiAgICAgTWF4IDwtIGMoTWF4LCByb3VuZChtYXgoUEFbLGtdKSwyKSlcbiAgfVxuICAgZGYgPC0gZGF0YS5mcmFtZShyYmluZChNZWFuLCBTRCwgTWluLCBNYXgpKSBcbiAgIGNvbG5hbWVzKGRmKSA8LSBuYW1lcyhkYXRhKVxuICAgcHJpbnQoZGYpXG4gfVxuIFxubGlicmFyeShoZXJlKVxucmF0ZXJzIDwtIHJlYWQuY3N2KGhlcmUoXCJEYXRhXCIsIFwicmF0ZXJzLmNzdlwiKSlcbnJhdGVyX2RhdGEocmF0ZXJzWzI6OV0pXG5cbmBgYCJ9 -->
+<pre class="r"><code>
+ rater_data &lt;- function(data) 
+   {
+   N = nrow(data)
+   R = ncol(data)
+   
+   counts &lt;- NULL
+   
+   for(i in 1:(R-1)){
+     for (j in (i+1):R){
+           if (i != j) {  
+             
+             a &lt;- data[, i]
+             b &lt;- data[, j]
+             counts &lt;- c(counts, sum(a == b))  
+             percent &lt;- (counts/length(a))*100  
+                                               
+      } else {NULL}
+    }
+  }
+   
+   PA &lt;- matrix(percent, nrow= R, ncol= R)   
+                                             
+   Mean &lt;- NULL
+   SD &lt;- NULL
+   Min &lt;- NULL
+   Max &lt;- NULL
+   
+   for (k in 1:ncol(PA)){                     
+                                             
+     Mean &lt;- c(Mean, round(mean(PA[, k]), 2))
+     SD &lt;- c(SD, round(sd(PA[,k]),2))
+     Min &lt;- c(Min, round(min(PA[,k]),2))
+     Max &lt;- c(Max, round(max(PA[,k]),2))
+  }
+   df &lt;- data.frame(rbind(Mean, SD, Min, Max)) 
+   colnames(df) &lt;- names(data)
+   print(df)
+ }
+ 
+library(here)
+raters &lt;- read.csv(here(&quot;Data&quot;, &quot;raters.csv&quot;))
+rater_data(raters[2:9])
 </code></pre>
 <!-- rnb-source-end -->
-<!-- rnb-output-begin eyJkYXRhIjoiZGF0YSBsZW5ndGggWzI4XSBpcyBub3QgYSBzdWItbXVsdGlwbGUgb3IgbXVsdGlwbGUgb2YgdGhlIG51bWJlciBvZiByb3dzIFs4XVxuIn0= -->
-<pre><code>data length [28] is not a sub-multiple or multiple of the number of rows [8]</code></pre>
-<!-- rnb-output-end -->
-<!-- rnb-frame-begin eyJtZXRhZGF0YSI6eyJjbGFzc2VzIjpbImRhdGEuZnJhbWUiXSwibnJvdyI6NCwibmNvbCI6OH0sInJkZiI6Ikg0c0lBQUFBQUFBQUF3dHlpVERtaXVCaVlHQmdabUFCWW1aV0lKT0JOVFRFVGRlQ2dZR0ZDY2hoQkVwd2d1Z0tvQ0poSUlNRGlQbUFtTVhCSzd0VmJrZmdHd2R6YlFpdHBDZFM5ZEI5blVPUTNvN0ExNjN5Y0hWT0IwQ21NamlZcUtXQmdJT1FNUmc0K0hhRDljSFZXVEpBMUJuOUFwb2lVczBBQlE2ZU1CYk12SEl1MjRMRjF4MU1McjRHR2hBRXQ5Y2Z3b2VyZytwek1Gdng5VkIvakNiY1hnejNRZldiekFPTDQzU2ZsZkoxb01WTEhJd2dOTng5M201Z2Z4RWZMaWdCeTVxWG1KdGFER1FJZ0FNWElzZ2VsRmlTV3FUbmlNcDFRdVU2bzNKZFVMbXVxRnczVks0N0t0Y0R6VkdjUmZubGVzZ09ZNEZLc1BpbUp1WkIyVXpCTUN1WmZUUHo0TXpFQ25RZkp1Y2tGc01NZ2dseXBTU1dKT3FsRlFIdEFQTCtvV2xoenk4b3ljelBBMnBpQXFVNVZqVE5qRVZvQWdLbGVTRFhwdWdtWjVUbVplc2FHWUZzQU10RE1DK1Vaa0ZpYzBEc1pQb1BOWXNWYWhaYmFsNTZabDRxelBFNWlVbXBPVkFPSHpCWXdLR2lWMUNVbVZjQzh3cFF0Rml2Skw4a0VhYU9LemsvQnlZQzloekRQd0FHTFAvZGF3TUFBQT09In0= -->
-<div data-pagedtable="false">
-<script data-pagedtable-source type="application/json">
-{"columns":[{"label":[""],"name":["_rn_"],"type":[""],"align":["left"]},{"label":["Rater.A"],"name":[1],"type":["dbl"],"align":["right"]},{"label":["Rater.B"],"name":[2],"type":["dbl"],"align":["right"]},{"label":["Rater.C"],"name":[3],"type":["dbl"],"align":["right"]},{"label":["Rater.D"],"name":[4],"type":["dbl"],"align":["right"]},{"label":["Rater.E"],"name":[5],"type":["dbl"],"align":["right"]},{"label":["Rater.F"],"name":[6],"type":["dbl"],"align":["right"]},{"label":["Rater.G"],"name":[7],"type":["dbl"],"align":["right"]},{"label":["Rater.H"],"name":[8],"type":["dbl"],"align":["right"]}],"data":[{"1":"52.84","2":"37.50","3":"25.00","4":"36.93","5":"50.00","6":"36.36","7":"26.14","8":"52.84","_rn_":"Mean"},{"1":"23.17","2":"20.15","3":"18.98","4":"20.82","5":"22.66","6":"20.62","7":"18.14","8":"23.17","_rn_":"SD"},{"1":"9.09","2":"4.55","3":"0.00","4":"9.09","5":"4.55","6":"4.55","7":"0.00","8":"9.09","_rn_":"Min"},{"1":"72.73","2":"59.09","3":"50.00","4":"63.64","5":"72.73","6":"59.09","7":"54.55","8":"72.73","_rn_":"Max"}],"options":{"columns":{"min":{},"max":[10],"total":[8]},"rows":{"min":[10],"max":[10],"total":[4]},"pages":{}}}
-  </script>
-</div>
-<!-- rnb-frame-end -->
 <!-- rnb-chunk-end -->
 <!-- rnb-text-begin -->
 </div>
 <div id="section-1" class="section level3">
 <h3>3</h3>
+<p>My attempt at the function for this.</p>
+<p>I metacoded a bit, got lost, and am using Dr. Seaman’s function</p>
 <p>Write a function that takes two arguments. The first is a data frame of raters (in columns) and their observation scores (in rows). The second is a matrix with two columns in which each row specifies the lowest and highest scores that should be collapsed to form a new category. The function should return a data frame of raters and their scores based on the newly formed categories</p>
 <!-- rnb-text-end -->
 <!-- rnb-chunk-begin -->
-<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuXG4jIFdyaXRlIGZ1bmN0aW9uIHdpdGggdHdvIGFyZ3VtZW50c1xuXG4gICMgYXJndW1lbnQgMTogQ3JlYXRlIGEgZGF0YSBmcmFtZVxuICAgICMgcmF0ZXJzIGluIGNvbHVtbnNcbiAgICAjIG9ic2VydmF0aW9uIHNjb3JlcyAgaW4gcm93c1xuICBcbiAgIyBhcmd1bWVudCAyOiBDcmVhdGUgYSBtYXRyaXggd2l0aCB0d28gY29sdW1uc1xuICAgICMgY29sdW1uIDE6IGxvd2VzdCBzY29yZXMgY29sbGFwc2VkIGludG8gLS0+IGNhdGVnb3J5IDFcbiAgICAjIGNvbHVtbiAyOiBoaWdoZXN0IHNjb3JlcyBjb2xsYXBzZWQgaW50byAtLT4gY2F0ZWdvcnkgMlxuXG4jIHJldHVybiBhIGRhdGEgZnJhbWVcbiAgIyByYXRlcnMgaW4gY29sdW1uc1xuICAjIG5ldyBvYnNlcnZhdGlvbiBzY29yZXMgcmVjb2RlZCBpbnRvIDIgY2F0ZWdvcmllc1xuXG5udW1fcmF0ZXJzIDwtIG5jb2wobXlfZGF0YWZyYW1lKVxubnVtX29ic2VydmF0aW9ucyA8LSBucm93KG15X2RhdGFmcmFtZSlcblxuXG5jb2xsYXBzZV9tYXRyaXggPC0gbWF0cml4KGMoMSwgMiwgNCwgNCwgNSwgNiksICBcbiAgICAgICAgICAgICAgICAgICAgICAgICAgbmNvbCA9IDIsXG4gICAgICAgICAgICAgICAgICAgICAgICAgIGJ5cm93ID0gVFJVRSlcblxuXG5gYGAifQ== -->
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuXG4jIFdyaXRlIGZ1bmN0aW9uIHdpdGggdHdvIGFyZ3VtZW50c1xuXG4gICMgYXJndW1lbnQgMTogQ3JlYXRlIGEgZGF0YSBmcmFtZVxuICAgICMgcmF0ZXJzIGluIGNvbHVtbnNcbiAgICAjIG9ic2VydmF0aW9uIHNjb3JlcyAgaW4gcm93c1xuICBcbiAgIyBhcmd1bWVudCAyOiBDcmVhdGUgYSBtYXRyaXggd2l0aCB0d28gY29sdW1uc1xuICAgICMgY29sdW1uIDE6IGxvd2VzdCBzY29yZXMgY29sbGFwc2VkIGludG8gLS0+IGNhdGVnb3J5IDFcbiAgICAjIGNvbHVtbiAyOiBoaWdoZXN0IHNjb3JlcyBjb2xsYXBzZWQgaW50byAtLT4gY2F0ZWdvcnkgMlxuXG4jIHJldHVybiBhIGRhdGEgZnJhbWVcbiAgIyByYXRlcnMgaW4gY29sdW1uc1xuICAjIG5ldyBvYnNlcnZhdGlvbiBzY29yZXMgcmVjb2RlZCBpbnRvIDIgY2F0ZWdvcmllc1xuXG5cbm51bV9yYXRlcnMgPC0gbmNvbChteV9kYXRhZnJhbWUpXG5udW1fb2JzZXJ2YXRpb25zIDwtIG5yb3cobXlfZGF0YWZyYW1lKVxuXG5cbmNvbGxhcHNlX21hdHJpeCA8LSBtYXRyaXgoYygxLCAyLCA0LCA0LCA1LCA2KSwgIFxuICAgICAgICAgICAgICAgICAgICAgICAgICBuY29sID0gMixcbiAgICAgICAgICAgICAgICAgICAgICAgICAgYnlyb3cgPSBUUlVFKVxuXG4jIEkgaGF2ZSBhY2NlcHRlZCBteSBsaW1pdGF0aW9ucyBhbmQgd2lsbCB1c2UgRHIuIFNlYW1hbidzIGZ1bmN0aW9ucyBmb3IgdGhlc2UgcHJvYmxlbXNcblxuYGBgIn0= -->
 <pre class="r"><code>
 # Write function with two arguments
 
@@ -1806,6 +1841,7 @@ summary {
   # raters in columns
   # new observation scores recoded into 2 categories
 
+
 num_raters &lt;- ncol(my_dataframe)
 num_observations &lt;- nrow(my_dataframe)
 
@@ -1813,14 +1849,32 @@ num_observations &lt;- nrow(my_dataframe)
 collapse_matrix &lt;- matrix(c(1, 2, 4, 4, 5, 6),  
                           ncol = 2,
                           byrow = TRUE)
+
+# I have accepted my limitations and will use Dr. Seaman&#39;s functions for these problems
 </code></pre>
 <!-- rnb-source-end -->
+<!-- rnb-chunk-end -->
+<!-- rnb-text-begin -->
+</div>
+<div id="section-2" class="section level3">
+<h3>4</h3>
+<p>My attempt at my own functions for number four. Feeling proud so fingers crossed</p>
+<!-- rnb-text-end -->
+<!-- rnb-chunk-begin -->
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuICAgICAgcm93bmFtZXMocmF0ZV92ZWN0b3IpIDwtIGMoXCJzY2hvb2wgMVwiLCBcInNjaG9vbCAyXCIsIFwic2Nob29sIDNcIilcblxuYGBgIn0= -->
+<pre class="r"><code>      rownames(rate_vector) &lt;- c(&quot;school 1&quot;, &quot;school 2&quot;, &quot;school 3&quot;)
+</code></pre>
+<!-- rnb-source-end -->
+<!-- rnb-output-begin eyJkYXRhIjoiRXJyb3IgaW4gYHJvd25hbWVzPC1gKGAqdG1wKmAsIHZhbHVlID0gYyhcInNjaG9vbCAxXCIsIFwic2Nob29sIDJcIiwgXCJzY2hvb2wgM1wiIDogXG4gIGF0dGVtcHQgdG8gc2V0ICdyb3duYW1lcycgb24gYW4gb2JqZWN0IHdpdGggbm8gZGltZW5zaW9uc1xuIn0= -->
+<pre><code>Error in `rownames&lt;-`(`*tmp*`, value = c(&quot;school 1&quot;, &quot;school 2&quot;, &quot;school 3&quot; : 
+  attempt to set &#39;rownames&#39; on an object with no dimensions</code></pre>
+<!-- rnb-output-end -->
 <!-- rnb-chunk-end -->
 <!-- rnb-text-begin -->
 <!-- rnb-text-end -->
 </div>
 
-<div id="rmd-source-code">LS0tCnRpdGxlOiAiUHJvamVjdCBCIgphdXRob3I6ICJNaXRjaGVsbCBUb29tZXkiCmRhdGU6ICJGZWJydWFyeSAyNiwgMjAyMSIKb3V0cHV0OiBodG1sX25vdGVib29rCi0tLQoKIyMjIDIKCldyaXRlIGEgZnVuY3Rpb24gdGhhdCBoYXMgYSBzaW5nbGUgYXJndW1lbnQgdGhhdCBpcyBhIGRhdGEgZnJhbWUgb2YgcmF0ZXJzIChpbiBjb2x1bW5zKSBhbmQgdGhlaXIgb2JzZXJ2YXRpb24gc2NvcmVzIChpbiByb3dzKS4gVGhlIGZ1bmN0aW9uIHNob3VsZCByZXR1cm4gYSB3ZWxsLWxhYmVsZWQgZGF0YSBmcmFtZSB3aXRoIGFsbCBvdGhlciByYXRlcnMgKG5vdGUgdGhhdCBhIHNpbmdsZSBwZXJjZW50IGFncmVlbWVudCBpcyBhbW9uZyB0d28gcmF0ZXJzLCBzbyBhIHNlcGFyYXRlIHBlcmNlbnQgYWdyZWVtZW50IG5lZWRzIHRvIGJlIGNhbGN1bGF0ZWQgZm9yIGEgcmF0ZXIgd2l0aCBlYWNoIG90aGVyIHJhdGVyKS4gVGhlc2Ugc2hvdWxkIGJlIHRoZSBtZWFuIG9mIHRoZSBwZXJjZW50IGFncmVlbWVudCAoUEEpIHN0YXRpc3RpYywgdGhlIFNEIG9mIFBBLCBhbmQgdGhlIG1pbmltdW0gYW5kIG1heGltdW0gUEEKCmBgYHtyfQoKIHJhdGVyX2RhdGEgPC0gZnVuY3Rpb24oZGF0YSkgCiAgIHsKICAgTiA9IG5yb3coZGF0YSkKICAgUiA9IG5jb2woZGF0YSkKICAgCiAgIGNvdW50cyA8LSBOVUxMCiAgIAogICBmb3IoaSBpbiAxOihSLTEpKXsKICAgICBmb3IgKGogaW4gKGkrMSk6Uil7CiAgICAgICAgICAgaWYgKGkgIT0gaikgeyAgCiAgICAgICAgICAgICAKICAgICAgICAgICAgIGEgPC0gZGF0YVssIGldCiAgICAgICAgICAgICBiIDwtIGRhdGFbLCBqXQogICAgICAgICAgICAgY291bnRzIDwtIGMoY291bnRzLCBzdW0oYSA9PSBiKSkgIAogICAgICAgICAgICAgcGVyY2VudCA8LSAoY291bnRzL2xlbmd0aChhKSkqMTAwICAKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAKICAgICAgfSBlbHNlIHtOVUxMfQogICAgfQogIH0KICAgCiAgIFBBIDwtIG1hdHJpeChwZXJjZW50LCBucm93PSBSLCBuY29sPSBSKSAgIAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAKICAgTWVhbiA8LSBOVUxMCiAgIFNEIDwtIE5VTEwKICAgTWluIDwtIE5VTEwKICAgTWF4IDwtIE5VTEwKICAgCiAgIGZvciAoayBpbiAxOm5jb2woUEEpKXsgICAgICAgICAgICAgICAgICAgICAKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgCiAgICAgTWVhbiA8LSBjKE1lYW4sIHJvdW5kKG1lYW4oUEFbLCBrXSksIDIpKQogICAgIFNEIDwtIGMoU0QsIHJvdW5kKHNkKFBBWyxrXSksMikpCiAgICAgTWluIDwtIGMoTWluLCByb3VuZChtaW4oUEFbLGtdKSwyKSkKICAgICBNYXggPC0gYyhNYXgsIHJvdW5kKG1heChQQVssa10pLDIpKQogIH0KICAgZGYgPC0gZGF0YS5mcmFtZShyYmluZChNZWFuLCBTRCwgTWluLCBNYXgpKSAKICAgY29sbmFtZXMoZGYpIDwtIG5hbWVzKGRhdGEpCiAgIHByaW50KGRmKQogfQogCmxpYnJhcnkoaGVyZSkKcmF0ZXJzIDwtIHJlYWQuY3N2KGhlcmUoIkRhdGEiLCAicmF0ZXJzLmNzdiIpKQpyYXRlcl9kYXRhKHJhdGVyc1syOjldKQoKYGBgCgojIyMgMwoKV3JpdGUgYSBmdW5jdGlvbiB0aGF0IHRha2VzIHR3byBhcmd1bWVudHMuIFRoZSBmaXJzdCBpcyBhIGRhdGEgZnJhbWUgb2YgcmF0ZXJzIChpbiBjb2x1bW5zKSBhbmQgdGhlaXIgb2JzZXJ2YXRpb24gc2NvcmVzIChpbiByb3dzKS4gVGhlIHNlY29uZCBpcyBhIG1hdHJpeCB3aXRoIHR3byBjb2x1bW5zIGluIHdoaWNoIGVhY2ggcm93IHNwZWNpZmllcyB0aGUgbG93ZXN0IGFuZCBoaWdoZXN0IHNjb3JlcyB0aGF0IHNob3VsZCBiZSBjb2xsYXBzZWQgdG8gZm9ybSBhIG5ldyBjYXRlZ29yeS4gVGhlIGZ1bmN0aW9uIHNob3VsZCByZXR1cm4gYSBkYXRhIGZyYW1lIG9mIHJhdGVycyBhbmQgdGhlaXIgc2NvcmVzIGJhc2VkIG9uIHRoZSBuZXdseSBmb3JtZWQgY2F0ZWdvcmllcwoKYGBge3J9CgojIFdyaXRlIGZ1bmN0aW9uIHdpdGggdHdvIGFyZ3VtZW50cwoKICAjIGFyZ3VtZW50IDE6IENyZWF0ZSBhIGRhdGEgZnJhbWUKICAgICMgcmF0ZXJzIGluIGNvbHVtbnMKICAgICMgb2JzZXJ2YXRpb24gc2NvcmVzICBpbiByb3dzCiAgCiAgIyBhcmd1bWVudCAyOiBDcmVhdGUgYSBtYXRyaXggd2l0aCB0d28gY29sdW1ucwogICAgIyBjb2x1bW4gMTogbG93ZXN0IHNjb3JlcyBjb2xsYXBzZWQgaW50byAtLT4gY2F0ZWdvcnkgMQogICAgIyBjb2x1bW4gMjogaGlnaGVzdCBzY29yZXMgY29sbGFwc2VkIGludG8gLS0+IGNhdGVnb3J5IDIKCiMgcmV0dXJuIGEgZGF0YSBmcmFtZQogICMgcmF0ZXJzIGluIGNvbHVtbnMKICAjIG5ldyBvYnNlcnZhdGlvbiBzY29yZXMgcmVjb2RlZCBpbnRvIDIgY2F0ZWdvcmllcwoKbnVtX3JhdGVycyA8LSBuY29sKG15X2RhdGFmcmFtZSkKbnVtX29ic2VydmF0aW9ucyA8LSBucm93KG15X2RhdGFmcmFtZSkKCgpjb2xsYXBzZV9tYXRyaXggPC0gbWF0cml4KGMoMSwgMiwgNCwgNCwgNSwgNiksICAKICAgICAgICAgICAgICAgICAgICAgICAgICBuY29sID0gMiwKICAgICAgICAgICAgICAgICAgICAgICAgICBieXJvdyA9IFRSVUUpCgoKYGBgCgo=</div>
+<div id="rmd-source-code">LS0tCnRpdGxlOiAiUHJvamVjdCBCIgphdXRob3I6ICJNaXRjaGVsbCBUb29tZXkiCmRhdGU6ICJGZWJydWFyeSAyNiwgMjAyMSIKb3V0cHV0OiBodG1sX25vdGVib29rCi0tLQoKIyMjIDIgCgpNeSBhdHRlbXB0IGF0ICMgMiwgSSBkb24ndCBrbm93IHRoYXQgSSBhbSBvbiB0aGUgcmlnaHQgdHJhY2stdXNpbmcgCkRyLiBTZWFtYW4ncyBmdW5jdGlvbgoKV3JpdGUgYSBmdW5jdGlvbiB0aGF0IGhhcyBhIHNpbmdsZSBhcmd1bWVudCB0aGF0IGlzIGEgZGF0YSBmcmFtZSBvZiByYXRlcnMgKGluIGNvbHVtbnMpIGFuZCB0aGVpciBvYnNlcnZhdGlvbiBzY29yZXMgKGluIHJvd3MpLiBUaGUgZnVuY3Rpb24gc2hvdWxkIHJldHVybiBhIHdlbGwtbGFiZWxlZCBkYXRhIGZyYW1lIHdpdGggYWxsIG90aGVyIHJhdGVycyAobm90ZSB0aGF0IGEgc2luZ2xlIHBlcmNlbnQgYWdyZWVtZW50IGlzIGFtb25nIHR3byByYXRlcnMsIHNvIGEgc2VwYXJhdGUgcGVyY2VudCBhZ3JlZW1lbnQgbmVlZHMgdG8gYmUgY2FsY3VsYXRlZCBmb3IgYSByYXRlciB3aXRoIGVhY2ggb3RoZXIgcmF0ZXIpLiBUaGVzZSBzaG91bGQgYmUgdGhlIG1lYW4gb2YgdGhlIHBlcmNlbnQgYWdyZWVtZW50IChQQSkgc3RhdGlzdGljLCB0aGUgU0Qgb2YgUEEsIGFuZCB0aGUgbWluaW11bSBhbmQgbWF4aW11bSBQQQoKYGBge3J9CgogcmF0ZXJfZGF0YSA8LSBmdW5jdGlvbihkYXRhKSAKICAgewogICBOID0gbnJvdyhkYXRhKQogICBSID0gbmNvbChkYXRhKQogICAKICAgY291bnRzIDwtIE5VTEwKICAgCiAgIGZvcihpIGluIDE6KFItMSkpewogICAgIGZvciAoaiBpbiAoaSsxKTpSKXsKICAgICAgICAgICBpZiAoaSAhPSBqKSB7ICAKICAgICAgICAgICAgIAogICAgICAgICAgICAgYSA8LSBkYXRhWywgaV0KICAgICAgICAgICAgIGIgPC0gZGF0YVssIGpdCiAgICAgICAgICAgICBjb3VudHMgPC0gYyhjb3VudHMsIHN1bShhID09IGIpKSAgCiAgICAgICAgICAgICBwZXJjZW50IDwtIChjb3VudHMvbGVuZ3RoKGEpKSoxMDAgIAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAogICAgICB9IGVsc2Uge05VTEx9CiAgICB9CiAgfQogICAKICAgUEEgPC0gbWF0cml4KHBlcmNlbnQsIG5yb3c9IFIsIG5jb2w9IFIpICAgCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAogICBNZWFuIDwtIE5VTEwKICAgU0QgPC0gTlVMTAogICBNaW4gPC0gTlVMTAogICBNYXggPC0gTlVMTAogICAKICAgZm9yIChrIGluIDE6bmNvbChQQSkpeyAgICAgICAgICAgICAgICAgICAgIAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAKICAgICBNZWFuIDwtIGMoTWVhbiwgcm91bmQobWVhbihQQVssIGtdKSwgMikpCiAgICAgU0QgPC0gYyhTRCwgcm91bmQoc2QoUEFbLGtdKSwyKSkKICAgICBNaW4gPC0gYyhNaW4sIHJvdW5kKG1pbihQQVssa10pLDIpKQogICAgIE1heCA8LSBjKE1heCwgcm91bmQobWF4KFBBWyxrXSksMikpCiAgfQogICBkZiA8LSBkYXRhLmZyYW1lKHJiaW5kKE1lYW4sIFNELCBNaW4sIE1heCkpIAogICBjb2xuYW1lcyhkZikgPC0gbmFtZXMoZGF0YSkKICAgcHJpbnQoZGYpCiB9CiAKbGlicmFyeShoZXJlKQpyYXRlcnMgPC0gcmVhZC5jc3YoaGVyZSgiRGF0YSIsICJyYXRlcnMuY3N2IikpCnJhdGVyX2RhdGEocmF0ZXJzWzI6OV0pCgpgYGAKCiMjIyAzCgpNeSBhdHRlbXB0IGF0IHRoZSBmdW5jdGlvbiBmb3IgdGhpcy4KCkkgbWV0YWNvZGVkIGEgYml0LCBnb3QgbG9zdCwgYW5kIGFtIHVzaW5nIERyLiBTZWFtYW4ncyBmdW5jdGlvbgoKV3JpdGUgYSBmdW5jdGlvbiB0aGF0IHRha2VzIHR3byBhcmd1bWVudHMuIFRoZSBmaXJzdCBpcyBhIGRhdGEgZnJhbWUgb2YgcmF0ZXJzIChpbiBjb2x1bW5zKSBhbmQgdGhlaXIgb2JzZXJ2YXRpb24gc2NvcmVzIChpbiByb3dzKS4gVGhlIHNlY29uZCBpcyBhIG1hdHJpeCB3aXRoIHR3byBjb2x1bW5zIGluIHdoaWNoIGVhY2ggcm93IHNwZWNpZmllcyB0aGUgbG93ZXN0IGFuZCBoaWdoZXN0IHNjb3JlcyB0aGF0IHNob3VsZCBiZSBjb2xsYXBzZWQgdG8gZm9ybSBhIG5ldyBjYXRlZ29yeS4gVGhlIGZ1bmN0aW9uIHNob3VsZCByZXR1cm4gYSBkYXRhIGZyYW1lIG9mIHJhdGVycyBhbmQgdGhlaXIgc2NvcmVzIGJhc2VkIG9uIHRoZSBuZXdseSBmb3JtZWQgY2F0ZWdvcmllcwoKYGBge3J9CgojIFdyaXRlIGZ1bmN0aW9uIHdpdGggdHdvIGFyZ3VtZW50cwoKICAjIGFyZ3VtZW50IDE6IENyZWF0ZSBhIGRhdGEgZnJhbWUKICAgICMgcmF0ZXJzIGluIGNvbHVtbnMKICAgICMgb2JzZXJ2YXRpb24gc2NvcmVzICBpbiByb3dzCiAgCiAgIyBhcmd1bWVudCAyOiBDcmVhdGUgYSBtYXRyaXggd2l0aCB0d28gY29sdW1ucwogICAgIyBjb2x1bW4gMTogbG93ZXN0IHNjb3JlcyBjb2xsYXBzZWQgaW50byAtLT4gY2F0ZWdvcnkgMQogICAgIyBjb2x1bW4gMjogaGlnaGVzdCBzY29yZXMgY29sbGFwc2VkIGludG8gLS0+IGNhdGVnb3J5IDIKCiMgcmV0dXJuIGEgZGF0YSBmcmFtZQogICMgcmF0ZXJzIGluIGNvbHVtbnMKICAjIG5ldyBvYnNlcnZhdGlvbiBzY29yZXMgcmVjb2RlZCBpbnRvIDIgY2F0ZWdvcmllcwoKCm51bV9yYXRlcnMgPC0gbmNvbChteV9kYXRhZnJhbWUpCm51bV9vYnNlcnZhdGlvbnMgPC0gbnJvdyhteV9kYXRhZnJhbWUpCgoKY29sbGFwc2VfbWF0cml4IDwtIG1hdHJpeChjKDEsIDIsIDQsIDQsIDUsIDYpLCAgCiAgICAgICAgICAgICAgICAgICAgICAgICAgbmNvbCA9IDIsCiAgICAgICAgICAgICAgICAgICAgICAgICAgYnlyb3cgPSBUUlVFKQoKIyBJIGhhdmUgYWNjZXB0ZWQgbXkgbGltaXRhdGlvbnMgYW5kIHdpbGwgdXNlIERyLiBTZWFtYW4ncyBmdW5jdGlvbnMgZm9yIHRoZXNlIHByb2JsZW1zCgpgYGAKCiMjIyA0IAoKTXkgYXR0ZW1wdCBhdCBteSBvd24gZnVuY3Rpb25zIGZvciBudW1iZXIgZm91ci4gRmVlbGluZyBwcm91ZCBzbyBmaW5nZXJzIGNyb3NzZWQKCmBgYHtyfQoKCiMgY3JlYXRlIGEgZGF0YSBmcmFtZSBvZiByYXRpbmdzCiAgICMgYmFzaWNhbGx5IHRoZXJlIGFyZSBzY29yZXMgZm9yIHJhdGVycyBvbiBlYWNoIHJvdwoKICAgICAgIyBjb2x1bW5zID0gcmF0ZXJzCiAgICAgICMgcm93cyA9IG9ic2VydmF0aW9ucwogICAKICAgZGZfcmF0ZXJzIDwtIGZ1bmN0aW9uKG15X2RmKXsKICAgCiAgICAgIHJhdGVyXzEgPC0gYygzLCA0LCA1KQogICAgICByYXRlcl8yIDwtIGMoNCwgNSwgMikKICAgICAgcmF0ZXJfMyA8LSBjKDIsIDMsIDQpCiAgICAgIHJhdGVyXzQgPC0gYyg1LCA0LCAzKQogICAKICAgICAgbXlfbWF0cml4IDwtIGNiaW5kKHJhdGVyXzEsIHJhdGVyXzIsIHJhdGVyXzMsIHJhdGVyXzQpCiAgICAgIAogICAgICByb3duYW1lcyhteV9tYXRyaXgpIDwtIGMoInNjaG9vbF8xIiwgInNjaG9vbF8yIiwgInNjaG9vbF8zIikKICAgICAgCiAgICAgIG15X2RmIDwtIGFzLmRhdGEuZnJhbWUobXlfbWF0cml4KQp9CiAgICMgd2Ugd2FudCB0byBzdW0gdGhlIHNjb3JlcyBvbiBlYWNoIHJvdwogICAKICAgZGZfcmF0ZXJfc3VtIDwtIGZ1bmN0aW9uKG15X2RmKXsKICAgICAgCiAgICAgIGRmX3N1bXMgPC0gcm93U3VtcyhteV9kZikKICAgICAgCiAgICAgIG15X2RmIDwtIGNiaW5kKG15X2RmLCBkZl9zdW1zKQogICAgICAKfSAgICAgIAogICAKICAgIyB0aGVuIHJldHVybiBhbiBvcmRlcmVkIGludGVnZXIgdmVjdG9yCiAgICAgICMgcmFua2luZyBzdW1tZWQgc2NvcmVzIGluIG9yZGVyIGZyb20gMXN0LCAybmQsIDNyZAogICAgICAKICAgcmFua19yYXRlcl9zdW1zIDwtIGZ1bmN0aW9uKHJhdGVfdmVjdG9yKXsgICAKICAgCiAgICAgIHUgPC0gdW5pcXVlKHNvcnQoZGZfc3VtcywgZGVjcmVhc2luZyA9IFRSVUUpKQogICAgICBuIDwtIDEKICAgICAgcmF0ZV92ZWN0b3IgPC0gKDE6bGVuZ3RoKGRmX3N1bXMpKQogICAgICBuYW1lcyhyYXRlX3ZlY3RvcikgPC0gYygic2Nob29sIDEiLCAic2Nob29sIDIiLCAic2Nob29sIDMiKQoKICAgICAgZm9yIChpIGluIDE6bGVuZ3RoKHUpKSB7CiAgICAgICAgIGZvciAoaiBpbiAxOmxlbmd0aChkZl9zdW1zKSkgewogICAgICAgICAgICBpZihkZl9zdW1zW2pdID09IHVbbl0pIHJhdGVfdmVjdG9yW2pdIDwtIG4KICAgICAgICAgICAgCiAgICAgICAgIH0gCiAgICAgICAgIG4gPC0gbisxIAogICAgICAgCiAgICAgIH0KIAogICAgICByYXRlX3ZlY3RvciA8LSBzb3J0KHJhdGVfdmVjdG9yLCBkZWNyZWFzaW5nID0gRkFMU0UpCn0KCmBgYAoKCg==</div>
 
 
 
@@ -1867,7 +1921,7 @@ $(document).ready(function () {
 <!-- code folding -->
 <script>
 $(document).ready(function () {
-  window.initializeSourceEmbed("Toomey_Project B.Rmd");
+  window.initializeSourceEmbed("Toomey_Project B Functions.Rmd");
   window.initializeCodeFolding("show" === "show");
 });
 </script>

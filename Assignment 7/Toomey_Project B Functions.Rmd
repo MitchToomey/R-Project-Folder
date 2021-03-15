@@ -5,7 +5,10 @@ date: "February 26, 2021"
 output: html_notebook
 ---
 
-### 2
+### 2 
+
+My attempt at # 2, I don't know that I am on the right track-using 
+Dr. Seaman's function
 
 Write a function that has a single argument that is a data frame of raters (in columns) and their observation scores (in rows). The function should return a well-labeled data frame with all other raters (note that a single percent agreement is among two raters, so a separate percent agreement needs to be calculated for a rater with each other rater). These should be the mean of the percent agreement (PA) statistic, the SD of PA, and the minimum and maximum PA
 
@@ -58,6 +61,10 @@ rater_data(raters[2:9])
 
 ### 3
 
+My attempt at the function for this.
+
+I metacoded a bit, got lost, and am using Dr. Seaman's function
+
 Write a function that takes two arguments. The first is a data frame of raters (in columns) and their observation scores (in rows). The second is a matrix with two columns in which each row specifies the lowest and highest scores that should be collapsed to form a new category. The function should return a data frame of raters and their scores based on the newly formed categories
 
 ```{r}
@@ -76,6 +83,7 @@ Write a function that takes two arguments. The first is a data frame of raters (
   # raters in columns
   # new observation scores recoded into 2 categories
 
+
 num_raters <- ncol(my_dataframe)
 num_observations <- nrow(my_dataframe)
 
@@ -84,6 +92,68 @@ collapse_matrix <- matrix(c(1, 2, 4, 4, 5, 6),
                           ncol = 2,
                           byrow = TRUE)
 
+# I have accepted my limitations and will use Dr. Seaman's functions for these problems
 
 ```
+
+### 4 
+
+My attempt at my own functions for number four. Feeling proud so fingers crossed
+
+```{r}
+
+
+# create a data frame of ratings
+   # basically there are scores for raters on each row
+
+      # columns = raters
+      # rows = observations
+   
+   df_raters <- function(my_df){
+   
+      rater_1 <- c(3, 4, 5)
+      rater_2 <- c(4, 5, 2)
+      rater_3 <- c(2, 3, 4)
+      rater_4 <- c(5, 4, 3)
+   
+      my_matrix <- cbind(rater_1, rater_2, rater_3, rater_4)
+      
+      rownames(my_matrix) <- c("school_1", "school_2", "school_3")
+      
+      my_df <- as.data.frame(my_matrix)
+}
+   # we want to sum the scores on each row
+   
+   df_rater_sum <- function(my_df){
+      
+      df_sums <- rowSums(my_df)
+      
+      my_df <- cbind(my_df, df_sums)
+      
+}      
+   
+   # then return an ordered integer vector
+      # ranking summed scores in order from 1st, 2nd, 3rd
+      
+   rank_rater_sums <- function(rate_vector){   
+   
+      u <- unique(sort(df_sums, decreasing = TRUE))
+      n <- 1
+      rate_vector <- (1:length(df_sums))
+      names(rate_vector) <- c("school 1", "school 2", "school 3")
+
+      for (i in 1:length(u)) {
+         for (j in 1:length(df_sums)) {
+            if(df_sums[j] == u[n]) rate_vector[j] <- n
+            
+         } 
+         n <- n+1 
+       
+      }
+ 
+      rate_vector <- sort(rate_vector, decreasing = FALSE)
+}
+
+```
+
 
