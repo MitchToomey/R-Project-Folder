@@ -1,0 +1,205 @@
+---
+title: "Exercise D"
+author: "Mitchell Toomey"
+date: February 18, 2021
+output: html_notebook
+---
+
+```{r}
+library(here)
+```
+
+### 1
+
+```{r}
+# Loads mount juniper elementary data into a data frame
+
+mt_juniper_data <- read.csv(here("Data", "Mount Juniper Elementary Data.csv"))
+
+# prints either there are no missing data or there are missing data, 
+# depending on which is true
+
+mt_juniper_missing <- anyNA(mt_juniper_data$Score)
+
+mt_juniper_missing <- ifelse(mt_juniper_missing, 
+                                "There are missing data", 
+                             "There are no missing data")
+
+print(mt_juniper_missing)
+```
+
+### 2
+
+```{r}
+
+# Coerce grade to factor
+juniper_grade <- factor(mt_juniper_data$Grade,
+                        levels = c(3, 4, 5),
+                        labels = c("Grade 3", "Grade 4", "Grade 5"),
+                        ordered = FALSE)
+
+anova_grade <- aov(mt_juniper_data$Score ~ juniper_grade, 
+                      data = mt_juniper_data)
+
+# Store ANOVA in a separate object with the p-value extracted
+
+anova_results <- summary(anova_grade)[[1]][[1, 5]]
+
+# telling R to print not statistically significant if the p-value is > .05
+
+anova_results <- ifelse(anova_results > .05, 
+                                "Not statistically significant", 
+                        "statistically significant")
+
+print(anova_results)
+
+```
+
+### 3
+
+```{r}
+
+# Adding a "results" attribute to the anova grade object
+
+# I am using anova_grade as the object. I am not sure why exactly I use this
+# and not the anova_results object-- but the latter shows attributes as NULL.
+# I think because the anova_results object only has the sign. level in it.
+
+attributes(anova_grade)$Results<- ifelse(anova_results > .05, 
+                                "Not statistically significant", 
+                                "statistically Significant")
+
+```
+
+### 4
+
+```{r}
+# Consider a population of normally distributed scores with a mean of 100 and 
+# a standard deviation of15. Write a script to draw 1,000 random samples, 
+# each of size 40, from this population.
+
+norm_pop <- replicate(1000, sample(rnorm(1000, 100, 15), size = 40))
+
+# Calculate and store each mean in a vector of means
+
+norm_pop_means <- colMeans(norm_pop)
+
+# Calculate the mean of the sample means
+
+mean_of_means <- mean(norm_pop_means)
+
+# Determine the difference between the true mean of 100 and the mean of the 
+# sample means
+
+mean_of_means - 100
+
+# meaning there is no real difference between the true mean and the sample mean
+# this is an unbiased statistic 
+```
+
+### 5 
+
+Write a script that will count in your console pane from 0, in increments of 
+10, up to 1000. Do three different versions of the script: a) with a for loop, 
+b) with a while loop, and c) with a repeat and break structure
+
+```{r}
+# for loop
+
+for(i in seq(from=0, to=1000, by=10)){
+  print(i)
+}
+
+# while loop
+
+my_number <- 0
+
+while (my_number <= 1000) {
+  print(my_number)
+  my_number <- my_number + 10
+}
+
+# repeat and break loop
+
+my_number = NULL
+
+my_number <- 0 
+
+repeat {
+  {
+  my_number <- my_number + 10  
+  print(my_number)
+}
+  if (my_number == 1000) {
+    break
+  }
+}
+```
+
+### 6
+
+The secret code file contains a hidden message. Use nested for loops to reveal 
+the message by pasting together the characters in every 8th position 
+(i.e., positions 8, 16, 24, and 32) on all 23 rows
+
+```{r}
+secret_code <- read.csv(here("Data", "Secret Code.csv"), header = FALSE)
+
+secret_message <- NULL
+
+for (i in 1:23) {
+  for(j in c(8, 16, 24, 32)) {
+    secret_message <- paste(secret_message, secret_code[i, j], sep = "") 
+  }
+}
+
+secret_message
+```
+
+### 7
+
+Bootstrapping is a statistical method for making inferences based on repeated 
+sampling from a sample of observed values. Write a script to construct a 90% 
+confidence interval for the mean using bootstrapping by taking the following 
+steps. (Note: there are bootstrapping functions and packages, but do not use 
+these for this assignment. Instead, follow the steps below)
+
+```{r}
+# a. load the sample sata into an object. These data contain 30 scores 
+# selected at random from an unknown population
+
+sample_data <- read.csv(here("Data", "Sample Data.csv"))
+
+sample_data <- sample_data[, 1]                        
+
+# b. Select and store 5,000 samples of size 30 that are sampled from the 
+# Sample Data with replacement. (Hint: use the sample function)
+
+fivethous_sample <- data.frame(matrix(ncol = 500, nrow = 30))
+
+for (i in 1:5000) {
+  fivethous_sample[ , i] <- sample(sample_data, size = 30, 
+                                    replace = TRUE)
+}
+
+# c. Calculate and store the mean of every sample. Collectively these 
+# means will be an estimate of the sampling distribution of the mean.
+
+sample_means <- colMeans(fivethous_sample)
+
+# d. The 5th and 95th percentiles of the sampling distribution are the 
+# boundaries of a 90% confidence interval. Calculate these and report your 
+# interval. 
+
+bounds <- quantile(sample_means, c(0.05, 0.95))
+
+print(bounds)
+
+# The boundaries for a 90% confidence interval are (308.43, 343.20)
+```
+
+***
+
+**Great work!**
+
+**80/80**
