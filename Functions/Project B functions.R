@@ -1,3 +1,6 @@
+These are the functions that worked that I got from a classmate. 
+My attempts at 2 and 3 are in the file "Project B functions_attempt"
+
 #### 2. 
 
 rate_my_data<- function (data) 
@@ -98,18 +101,18 @@ final_decision <- function (x) #this function sums the rows and sorts the column
   {
     if (sorted[i+1, col_numb+1] < sorted[i, col_numb+1])
     {
-      result<- result + 1
-      ranked_result<-c(ranked_result, result)
+      result <- result + 1
+      ranked_result <- c(ranked_result, result)
     }
     else if (sorted[i+1, col_numb+1] == sorted[i, col_numb+1])
     {
-      result<- result
-      ranked_result<-c(ranked_result, result)
+      result <- result
+      ranked_result <- c(ranked_result, result)
     }
     
   }
   
-  final<-cbind(ranked_result, sorted)
+  final <- cbind(ranked_result, sorted)
   return(final)
   
 }
