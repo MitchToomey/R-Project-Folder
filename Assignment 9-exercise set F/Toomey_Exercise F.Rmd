@@ -1,0 +1,369 @@
+---
+title: "Exercise Set F"
+author: "Mitchell Toomey"
+date: "March 28, 2021"
+output: html_notebook
+---
+
+# 1
+
+Prepare the College Study Data for analysis by cleaning it and importing it into R. Each variable in your data frame should be the most appropriate type of vector for the data. When you clean and import the data, you should also screen the data by checking to make sure that the data for each variable are within the specified range. If you find incorrect data and are quite certain that you know what the data should be, change the data to the correct values. If you are not sure, indicate in the cells that the data are missing.
+
+```{r}
+library(here)
+library(tidyverse)
+
+college_data <- read_csv(here("Data", "College Study Data.csv"))
+
+college_data
+
+college_data_probs <- problems(college_data)
+
+college_data_probs
+```
+
+This is me comparing the original data to after the data have been read for the
+rows that have problems. The read.csv function let me know what typo'd
+data was actually entered so I know what to change
+
+```{r}
+
+college_data_original <- read.csv(here("Data", "College Study Data.csv"))
+college_data_original[college_data_probs$row, ]
+college_data[college_data_probs$row, ]
+
+```
+
+Correcting the gpa of row 11780
+
+```{r}
+college_data$gpa[11780] <- 2.80
+
+college_data[11780, ]
+```
+
+Shifting in columns to the right for one of the rows in the previous
+chunk
+
+```{r}
+
+college_data$id[10274] <- 10274
+college_data$gender[10274] <- "male"
+college_data$class[10274] <- "junior"
+college_data$gpa[10274] <- 2.68
+college_data$scale1[10274] <- 3
+college_data$scale2[10274] <- 8
+
+college_data[10274, ]
+```
+
+Correcting the scale two score 
+```{r}
+college_data$scale2[12225] <- 4
+
+college_data[12225, ]
+```
+
+Now to manually check each variable to make sure everything is good to go
+
+Now to check if the data are within range. First the IDs, and making sure 
+each ID is unique which means they are all represented
+```{r}
+min(college_data$id)
+max(college_data$id)
+
+# checking that all IDs are unique
+
+length(unique(college_data$id))
+```
+
+Now checking gender
+
+```{r}
+table(college_data$gender)
+```
+
+I will change the capital F Female to lowercase f female
+
+```{r}
+# looking for Female
+
+college_data$id[college_data$gender == "Female"]
+
+# checking the row
+
+college_data[5513, ]
+
+# changing it
+
+college_data$gender[5513] <- "female"
+
+# checking again
+
+college_data[5513, ]
+```
+
+Now to change capital M Male to lowercase m male
+
+```{r}
+# looking for Male
+
+college_data$id[college_data$gender == "Male"]
+
+# checking the row
+
+college_data[8963, ]
+
+# changing it
+
+college_data$gender[8963] <- "male"
+
+# checking again
+
+college_data[8963, ]
+
+```
+
+Now to change the senior title from the gender column
+
+```{r}
+# looking for senior
+
+college_data$id[college_data$gender == "senior"]
+
+# checking the row
+
+college_data[3020, ]
+
+# gender and class were swapped!
+# changing gender to female
+
+college_data$gender[3020] <- "female"
+
+# changing class to senior
+
+college_data$class[3020] <- "senior"
+
+
+# checking again
+
+college_data[3020, ]
+```
+
+Checking gender again
+
+```{r}
+table(college_data$gender)
+```
+
+Now checking the class variable
+
+```{r}
+table(college_data$class)
+```
+
+Finding and correcting junirr to junior
+
+```{r}
+# looking for junirr
+
+college_data$id[college_data$class == "junirr"]
+
+# checking the row
+
+college_data[11928, ]
+
+# changing class to senior
+
+college_data$class[11928] <- "junior"
+
+
+# checking again
+
+college_data[11928, ]
+```
+
+Now to find SENIOR and change it to senior
+
+```{r}
+# looking for SENIOR
+
+college_data$id[college_data$class == "SENIOR"]
+
+# checking the row
+
+college_data[6472, ]
+
+# changing class to senior
+
+college_data$class[6472] <- "senior"
+
+
+# checking again
+
+college_data[6472, ]
+```
+
+Rechecking class to make sure it is okay
+
+```{r}
+table(college_data$class)
+```
+
+Now checking gpa
+
+```{r}
+min(college_data$gpa, na.rm = TRUE)
+max(college_data$gpa, na.rm = TRUE)
+```
+
+Data should only max our at 4.00. I need to find GPAs above 4.00
+
+```{r}
+college_data$id[college_data$gpa > 4.00 & !is.na(college_data$gpa)]
+
+# looking at the row
+
+college_data[10918, ]
+```
+
+Not sure what that 12.96 is supposed to be so just gonna make it NA
+
+```{r}
+college_data$gpa[10918] <- NA
+
+college_data[10918, ]
+```
+
+Checking to make sure gpa all checks out
+
+```{r}
+min(college_data$gpa, na.rm = TRUE)
+max(college_data$gpa, na.rm = TRUE)
+```
+
+Now to check scale1
+
+```{r}
+table(college_data$scale1)
+```
+
+Someone put -99 as missing values so I need to make them NA
+
+```{r}
+college_data$scale1[college_data$scale1 == -99] <- NA
+```
+
+Now to check scale1 again to see if -99's have been changed
+
+```{r}
+table(college_data$scale1)
+```
+
+Now to check scale2
+
+```{r}
+table(college_data$scale2)
+```
+
+Okay, gotta change the -999, -99, -9, and 12 to NA
+
+```{r}
+college_data$scale2[college_data$scale2 == -999] <- NA
+
+college_data$scale2[college_data$scale2 == -99] <- NA
+
+college_data$scale2[college_data$scale2 == -9] <- NA
+
+college_data$scale2[college_data$scale2 == 12] <- NA
+
+```
+
+Now to check scale2 again
+
+```{r}
+table(college_data$scale2)
+```
+
+Read_csv may have changed the classes depending on the errors, so I want
+to check the classes
+
+```{r}
+college_data
+```
+
+id, gender should be categorical cus their values do not have numerical meaning
+make scale1 and scale2 to integers because it will be prettier since they are 
+not doubles
+
+```{r}
+college_data$id <- factor(college_data$id)
+college_data$gender <- factor(college_data$gender)
+college_data$class <- factor(college_data$class)
+college_data$scale1 <- as.integer(college_data$scale1)
+college_data$scale2 <- as.integer(college_data$scale2)
+```
+
+checking class again now to make sure
+
+```{r}
+college_data
+```
+
+I am finally ready to write the cleaned data
+
+```{r}
+# now writing the cleaned data
+
+write.csv(college_data, here("Data", "College Study Data (Clean).csv"))
+```
+
+
+# 1 -- at end of problem one doing this per Dr. Seaman's request in tutorial sesh
+
+```{r}
+rm(list = ls())
+
+source(here("Functions", "College Data Check.R"))
+
+clean_collegedata <- read.csv(here("Data", "College Study Data (Clean).csv"))
+
+College_Data_Check(clean_collegedata)
+```
+
+# 2 
+Import and Tidy the Johnson Elementary Data
+
+```{r}
+library(readxl)
+
+johnson_elem <- read_excel(here("Data", "Johnson Elementary ELA Project.xlsx"), 
+                           skip = 3)
+
+johnson_elem <- rename(johnson_elem, "Room Number" = "...1")
+
+# Fill names of room numbers
+
+johnson_elem <- johnson_elem %>%
+  fill("Room Number")
+
+# Separate tardies and absences
+
+johnson_elem <- johnson_elem %>%
+  separate("Tardies; Absences", into = c("Tardies", "Absences"))
+
+# Group quarter scores into one quarter variable
+
+johnson_elem <- johnson_elem %>%
+  gather("1st Quarter", "2nd Quarter", "3rd Quarter", "4th Quarter",
+         key = "Quarter",
+         value = "Score")
+
+johnson_elem
+
+# writing it to a new file
+
+write_csv(johnson_elem, here("Data", "Johnson Elementary ELA Project_Cleaned.csv"))
+
+```
+
