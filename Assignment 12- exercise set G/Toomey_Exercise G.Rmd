@@ -1,0 +1,174 @@
+---
+title: "Exercise Set G"
+author: "Mitchell Toomey"
+date: "April 2, 2021"
+output: html_notebook
+---
+
+```{r}
+library(here)
+library(tidyverse)
+library(dplyr)
+library(hrbrthemes)
+library(MASS)
+library(lattice)
+
+college_data <- read_csv(here("Data", "College Study Data (Clean).csv"))
+
+johnson_elem <- read_csv(here("Data", "Johnson Elementary ELA Project_Cleaned.csv"))
+
+college_data
+```
+
+
+1. Use the College Study Data to calculate the means of the two scales by gender, by class, and by a combination of gender and class.
+
+```{r}
+
+# means grouped by gender
+
+college_data %>%
+  group_by(gender) %>%
+  summarize(scale1_mean = mean(scale1, na.rm = TRUE),
+            scale2_mean = mean(scale2, na.rm = TRUE))
+
+# means grouped by class
+
+college_data %>%
+  group_by(class) %>%
+  summarize(scale1_mean = mean(scale1, na.rm = TRUE),
+            scale2_mean = mean(scale2, na.rm = TRUE))
+
+# means groups by class x gender
+
+college_data %>%
+  group_by(class, gender) %>%
+  summarize(scale1_mean = mean(scale1, na.rm = TRUE),
+            scale2_mean = mean(scale2, na.rm = TRUE))
+
+```
+
+
+2. Construct side-by-side boxplots for the GPA for freshmen and seniors.
+
+```{r}
+# subset class by freshman and senior
+
+boxplot(gpa ~ class, data = college_data, 
+        subset = class %in% c("freshman", "senior"))
+  
+```
+
+3.  Write a script to import and tidy the Johnson Elementary Project Data. You have done this before, but now use a single chain of pipes and make certain the data are formally tidy. (20 points)
+
+```{r}
+library(readxl)
+
+johnson_elem <- read_excel(here("Data", "Johnson Elementary ELA Project.xlsx"), 
+                           skip = 3)
+
+johnson_elem <- rename(johnson_elem, "Room Number" = "...1")
+
+# Fill names of room numbers, separate tardies and absences, 
+# put quarters into a single quarter variable using a single chain of pipes
+
+johnson_elem <- johnson_elem %>%
+  fill("Room Number") %>%
+  separate("Tardies; Absences", into = c("Tardies", "Absences")) %>% 
+  gather("1st Quarter", "2nd Quarter", "3rd Quarter", "4th Quarter",
+         key = "Quarter",
+         value = "Score")
+
+# check for any problems
+
+problems(johnson_elem)
+
+# making sure it looks okay
+
+johnson_elem
+
+# writing it to a new file
+
+write_csv(johnson_elem, here("Data", "Johnson Elementary ELA Project_Cleaned2.csv"))
+```
+
+
+4. Write a script to provide summary statistics for the number of tardies and absences for each room.
+
+```{r}
+
+johnson_elem <- read_csv(here("Data", "Johnson Elementary ELA Project_Cleaned2.csv"))
+
+johnson_elem %>%
+  group_by(`Room Number`) %>%
+  summarize(mean(Tardies, na.rm = TRUE),
+            sd(Tardies, na.rm = TRUE),
+            min(Tardies, na.rm = TRUE),
+            max(Tardies, na.rm=TRUE))
+
+johnson_elem %>%
+  group_by(`Room Number`) %>%
+  summarize(mean(Absences, na.rm = TRUE),
+            sd(Absences, na.rm = TRUE),
+            min(Absences, na.rm = TRUE),
+            max(Absences, na.rm=TRUE))
+
+```
+
+5. Write a script to show the frequency of missing data points for each quarter by room.
+
+```{r}
+
+johnson_elem %>%
+  group_by(`Room Number`) %>%
+  summarize(count = sum(is.na(johnson_elem$Quarter)))
+
+```
+
+6. Construct a graph that illustrates the median rating trends across the four quarters for the fifth- grade classes. (20 points)
+
+```{r}
+
+johnson_elem %>%
+  group_by(Quarter) %>%
+  summarize(rating = median(Score, na.rm = TRUE)) %>%
+  ggplot(aes(x=Quarter, y=rating)) + 
+  geom_bar(stat = "identity") +
+  theme_ipsum() +
+  labs(x="Quarters", y="Rating")
+
+```
+
+7. Use the NYC flights data to construct a graph that compares carriers in terms of the proportion of 2013 flights that arrived on time when traveling from New York City to Atlanta. Your graph should include a title and easy-to-read labels, including the names of airlines rather than airline codes. You can find airline names in the Airlines Data.
+(40 points)
+
+```{r}
+
+library(readxl)
+
+# read in the data 
+
+nyc_flight <- read_excel(here("Data", "NYC Flights 2013.xlsx"))
+
+# made a stacked proportional bar plot
+
+nyc_flight %>%
+  group_by(carrier) %>%
+  filter(dest == "ATL") %>% 
+  mutate(on_off_time = (arr_delay >= 0) == TRUE | (arr_delay < 0) == FALSE) %>%
+  mutate(company = recode(carrier, 
+       "9E" = "Endeavor Air Inc.",
+       "DL" = "Delta Air Lines Inc.",
+       "EV" = "ExpressJet Airlines Inc.",
+       "FL" = "AirTrain Airways Corporation",
+       "MQ" = "Envoy Air",
+       "UA" = "United Air Lines Inc.",
+       "WN" = "Southwest Airlines Co.")) %>%
+  ggplot(aes(x=company, fill=on_off_time)) + 
+  geom_bar(position = "fill") +
+  theme(axis.text.x = element_text(angle = 90, hjust = 1)) +
+  labs(x="Airlines", y="Proportion Arrived on Time to Atlanta", 
+                fill="on time?")
+  
+```
+

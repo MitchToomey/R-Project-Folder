@@ -1,0 +1,226 @@
+---
+title: "Project E"
+author: "Mitchell Toomey"
+date: "March 21, 2021"
+output: html_notebook
+---
+
+```{r}
+library(here)
+
+library(tidyverse)
+
+library(hrbrthemes)
+
+hsb2 <- read_csv(here("Data", "hsb2.csv"))
+
+hsb2 <- as_tibble(hsb2)
+
+hsb2
+```
+
+### 1
+
+```{r}
+
+ggplot(hsb2, aes(x=math)) + 
+  geom_histogram(bins = 5)
+
+```
+
+
+### 2
+
+```{r}
+ggplot(hsb2, aes(x=math, y=science)) + 
+    geom_point()
+```
+
+
+### 3
+
+```{r}
+library(hrbrthemes)
+
+ggplot(hsb2, aes(x=math, y=science, color=factor(ses))) + 
+    geom_point(size=2) +
+    theme_ipsum()
+```
+
+### 4
+
+```{r}
+
+sp <- ggplot(hsb2, aes(x=math, y=science, color=factor(ses))) +
+  geom_point() +
+  geom_smooth(method=lm , color="red", se=FALSE) +
+  theme_ipsum()
+
+sp
+
+```
+
+
+### 5
+
+The first layer included the dataset in a data frame, and the aesthetics
+The second layer was a geometric object indicating the size of the plots 
+The third layer was a theme which made the scatterplot a specific color and font 
+
+### 6 making two faceted scatterplots around the relationship between math scores and science scores by school type (public vs. private) 
+
+```{r}
+sp + facet_grid(schtyp ~ .) +
+  labs(x="Math scores", y="Science scores", color="SES")
+
+# 1 is public
+# 2 is private
+```
+
+### 7 math scores compared across ses, with 1 = low, 2 = middle, 3 = high
+
+```{r}
+
+ggplot(hsb2, aes(x=as.factor(ses), y=math)) + 
+    geom_boxplot(fill="slateblue", alpha=0.7) + 
+    xlab("ses")
+
+```
+
+### 8 - side-by-side boxplots of math scores by ses, with individual observations accounted for
+
+```{r}
+
+hsb2 %>%
+  mutate(ses = factor(ses, levels = c(1, 2, 3), labels = c("low", "middle", "high"))) %>% 
+  ggplot(aes(x = ses, y = math, group = ses, fill = ses)) +
+    geom_boxplot(alpha = .7) +
+    geom_jitter(width = .05, alpha = .4) +
+    guides(fill = "none") +
+    theme_bw() +
+    labs(
+      x = "ses",
+      y = "math scores"
+    )
+```
+
+### 9 - side-by-side boxplots of math scores by ses, with individual observations accounted for, and mean math scores indicated by the red dots
+
+```{r}
+
+hsb2 %>%
+  mutate(ses = factor(ses, levels = c(1, 2, 3), labels = c("low", "middle", "high"))) %>% 
+  ggplot(aes(x = ses, y = math, group = ses, fill = ses)) +
+    geom_boxplot(alpha = .7) +
+    geom_jitter(width = .05, alpha = .4) +
+    guides(fill = "none") +
+    stat_summary(fun=mean, geom="point", shape=20, size=14, color="red",
+                 fill="red") +
+    theme_bw() +
+    labs(
+      x = "ses",
+      y = "math scores"
+    )
+
+```
+
+### 10
+
+```{r}
+
+# Grouped by ses
+ggplot(hsb2, aes(x=factor(schtyp), y=math, fill=factor(ses))) + 
+    geom_col(position = "fill", stat = "identity") +
+    labs(x="school type", y="math score proportion", fill="ses") 
+
+
+
+```
+
+
+### 11
+Use the mental health study data to graphically explore the relationship of life events and SES on mental health impairment. Your graph should illustrate whether SES moderates the influence of life events on mental health.
+
+```{r}
+# read in mh data
+mh_data <- read_csv(here("Data", "Mental Health Study Data.csv"))
+
+# break SES into three groups
+mh_data$SES_groups <- cut(mh_data$SES, breaks = 3) %>% 
+  factor(., labels = c("lower third", "middle third", "upper third"))
+  
+# plot the moderating relationship of ses
+ggplot(mh_data) +
+  aes(x = LifeEvts, y = MentImp, color = mh_data$SES_groups) +
+  geom_point(color = "grey") +
+  geom_smooth(method = "lm") +
+  labs(x="Life Events", y="Mental Impairment", color="SES") 
+
+
+```
+There is a positive relationship bt life events and mental impairment, and this
+is stronger for individuals from lower SES. 
+
+### 12
+Use the notes study data to graphically explore the relationship of 
+method of note taking to later recall. Your graph should illustrate whether 
+the type of lecture moderates the effect of note taking method on recall.
+
+```{r}
+# read in notes data
+notes_data <- read_csv(here("Data", "Notes Data.csv"))
+
+notes_data$lecture_type <- factor(notes_data$lecture,
+                                  levels = c(1, 2),
+                                  labels = c("disorganized", "organized"))
+
+# plot the moderating relationship of ses
+ggplot(notes_data) +
+  aes(x = notes, y = score, color = lecture_type) +
+  geom_point(color = "grey") +
+  geom_smooth(method = "lm", se = FALSE) +
+  labs(x="Type of Notes", y="Recall Test Score", color="Type of Lecture") 
+
+```
+Type of lecture moderates the relationship between type of notes and recall
+test scores, such that there is a positive relationship between type of note 
+and recall test scores in organized lectures, and a negative relationship for
+disorganized lectures. 
+
+### 13 
+
+For this exercise, use a data set of interest to you 
+(preferably one from your own research study or perhaps a study you have worked 
+on with a professor, though this is not a requirement) that includes at least 
+five variables with at least one of each type (categorical and quantitative). 
+Visually display relationships of multiple variables with a 
+single graph (Faceting is allowed). Your points for this exercise will be based 
+on the attractiveness of your graph, the number of variables you were able to 
+informatively include, and the amount of information that can be extracted 
+from your graph. (Think Hans Rosling!)
+
+```{r}
+# using the guns data from earlier in the course
+guns_data <- read_csv(here("Data", "guns.csv"))
+
+# This created a stacked bar with proportions of gun deaths based on gender
+ggplot(guns_data, aes(x=factor(Intent), y=Deaths, fill=factor(Gender))) + 
+    geom_col(position = "fill") +
+    labs(x="Intent", y="Number of Deaths", fill="Gender") 
+
+# Below is something I was playing with. Will delete probably after the tutorial
+# session
+# make a scatterplot faceted by gender for the relationship between gun deaths and
+# intent
+
+gd <- ggplot(guns_data, aes(x=Intent, y=Deaths, color=factor(Gender))) +
+  geom_point() +
+  geom_smooth(method=lm , color="red", se=FALSE) +
+  theme_ipsum()
+
+# facet the scatter plots to show multiple relationships
+gd + facet_grid(Gender ~ .) +
+  labs(x="Intent", y="Number of Deaths", color="Gender")
+
+```
+
