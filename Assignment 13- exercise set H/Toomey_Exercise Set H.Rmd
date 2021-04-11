@@ -1,7 +1,7 @@
 ---
 title: "Exercise set H"
 author: "Mitchell Toomey"
-date: "April 7, 2021"
+date: "April 11, 2021"
 output: html_notebook
 ---
 
@@ -57,24 +57,20 @@ to Atlanta in the year, combine them into an “other” category on your graph.
 
 ```{r}
 
-# less_than_500 <- flights_2 %>%
-  #select(flight, name) %>%
-  #filter(flight <= 500) %>%
-  #rename(other = "flight")
+atl_flights <- flights_2 %>%
+  group_by(carrier) %>%
+  filter(dest %in% c("ATL")) %>%
+  summarize(freq = n()) %>%
+  mutate(carrier = fct_collapse(carrier, 
+                                other = c("9E", "UA", "WN"))) %>%
+  ggplot(aes(x= carrier, y = freq)) +
+  geom_col(fill = "navy")+
+  ggtitle("Figure 2. Frequency of Flights to Atlanta (> 500)")
+  scale_x_discrete(drop = FALSE)
 
-# I know I need to turn all carrier's with flights less than 500 into other, 
-# and then have them joined into the data and use that for the bar, but
-# do not know how
 
 
-#flights_2 %>%
-  #group_by(name) %>%
-  #filter(dest == "ATL", flight <= 500) %>%
-  
-  #ggplot(aes(x=name, y=flight)) + 
-  #geom_bar() +
-  #theme(axis.text.x = element_text(angle = 90, hjust = 1)) +
-  #labs(x="Airlines", y="Number of flights to Atlanta in 2013")
+atl_flights
 
 ```
 
@@ -87,7 +83,29 @@ and vice versa.
 
 ```{r}
 
+UA <- as_tibble(flights_2) %>%
+  group_by(name) %>%
+  filter(name %in% c("United Air Lines Inc."))
 
+
+AA <- as_tibble(flights_2) %>%
+  group_by(name) %>%
+  filter(name %in% c ("American Airlines Inc."))
+
+airports <- read_csv(here("Data", "Airports Data.csv"))
+
+UA_joined<- UA %>%
+  left_join(airports, c ("dest" = "faa")) 
+
+
+AA_joined<- AA %>%
+  left_join(airports, c("dest" = "faa"))
+
+UA.only<- setdiff(UA_joined, AA_joined)
+UA.only
+
+AA.only<- setdiff(AA_joined, UA_joined)
+AA.only
 
 ```
 
