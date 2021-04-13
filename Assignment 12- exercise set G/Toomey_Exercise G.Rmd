@@ -137,6 +137,18 @@ johnson_elem %>%
   theme_ipsum() +
   labs(x="Quarters", y="Rating")
 
+# what Dr. Seaman did-- putting it here because I like it and want it for the 
+# future
+
+ELA_Data %>%
+  group_by(Room, Quarter) %>%
+  summarize(Median = median(Rating, na.rm = TRUE)) %>%
+  ggplot(aes(x = Quarter, y = Median, group = Room)) +
+  facet_wrap(vars(Room)) +
+  geom_point() +
+  geom_line() +
+  labs(title = "Quarter Trends in Ratings by Room")
+
 ```
 
 7. Use the NYC flights data to construct a graph that compares carriers in terms of the proportion of 2013 flights that arrived on time when traveling from New York City to Atlanta. Your graph should include a title and easy-to-read labels, including the names of airlines rather than airline codes. You can find airline names in the Airlines Data.
