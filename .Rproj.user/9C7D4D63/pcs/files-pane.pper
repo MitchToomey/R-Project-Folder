@@ -2,8 +2,8 @@
     "sortOrder": [
         {
             "columnIndex": 2,
-            "ascending": false
+            "ascending": true
         }
     ],
-    "path": "~/Documents/R Projects/R Class Project Folder/EDRM 718/Assignment 13- exercise set H"
+    "path": "~/Documents/R Projects/R Class Project Folder/EDRM 718/Functions"
 }

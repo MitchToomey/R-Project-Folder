@@ -1,0 +1,210 @@
+---
+title: "Exploring Loops"
+author: "Michael A. Seaman"
+date: "24 April 2020"
+version: 1.0
+output: html_notebook
+---
+
+```{r include=FALSE}
+
+library(tidyverse)
+library(here)
+
+```
+
+
+This is a presentation about loops and how to eliminate them.
+
+First, let us look at a loop and why we use them. I'm going to create a
+function that will calculate the mean of a vector of numbers.
+
+```{r}
+
+my_mean <- function(y) {
+
+  total_sum <- 0
+    
+  for (i in 1:length(y)) {
+    total_sum <- total_sum + y[i]
+  }
+  
+  return(total_sum / length(y))
+}
+
+```
+
+
+Call the function.
+
+```{r}
+
+my_numbers <- c(1, 3, 5, 7, 9)
+
+my_mean(my_numbers)
+
+```
+
+It would be easier, of course, to just use the mean function in Base R. This
+function is vectorized. That means that behind the scenes it uses a loop, but
+the loop has been compiled to run very fast. Vectorized functions allow us to
+use compiled loops without having to write loops ourselves.
+
+```{r}
+
+mean(my_numbers)
+
+```
+
+Even with vectorized functions, it sometimes would appear that we still need
+a loop. Consider the following matrix.
+
+```{r}
+
+my_matrix <- matrix(c(14, 21, 33, 42,
+                      19, 31, 28, 55,
+                      8,  27, 28, 48,
+                      11, 26, 30, 51),
+                    ncol = 4,
+                    byrow = TRUE)
+
+my_matrix
+
+```
+
+Suppose that we developed a new statistic based on squaring the difference 
+between the mean and the median. Squaring, of course, helps us look at 
+the size of differences regardless of whether the mean is above or below the median. This statistic will be small for symmetrical distributions, but get larger for skewed distributions. Here's a function for our new statistic.
+
+```{r}
+
+mean_med_sqr <- function(y) {
+
+    return((mean(y) - median(y))^2)
+}
+
+```
+
+Now I want to apply this function to the first column of my matrix. Here's
+the first column.
+
+```{r}
+
+my_matrix[, 1]
+
+```
+
+Now here's what I get when I calculate my new statistic.
+
+```{r}
+
+mean_med_sqr(my_matrix[, 1])
+
+```
+
+So far, so good! Now suppose I want to apply this function to each of the
+columns of my matrix. There are only four of them, so I could do it like this.
+
+```{r}
+
+mean_med_sqr(my_matrix[, 1])
+mean_med_sqr(my_matrix[, 2])
+mean_med_sqr(my_matrix[, 3])
+mean_med_sqr(my_matrix[, 4])
+
+```
+
+That works, but what if I had 100 columns in my matrix. Yikes! That's a lot of
+cutting and pasting and changing. Instead, I could use a for loop. For loops 
+are a bit like functions because they hide what is going on inside them, so to
+see the results I need a print statement.
+
+```{r}
+
+for (i in 1:ncol(my_matrix)) {
+  print(mean_med_sqr(my_matrix[, i]))
+}
+
+```
+
+OK, that's cool and it would work whether I have four columns or 400 columns.
+Yet I used a for loop and this video series is about getting rid of them.
+So, let's get rid of it! The apply function in Base R will apply our function 
+to every column. So we are already using vectorized functions (mean, median,
+and squaring), but now we will vectorize across the columns of our matrix as 
+well. This is vectorizing our vectorizing!
+
+You'll probably wonder what the number "2" is doing in this. It is telling R
+to vectorize across the second dimension (the columns). If we used a "1" it
+would apply the function for every row instead.
+
+```{r}
+
+apply(my_matrix, 2, mean_med_sqr)
+
+```
+
+The apply function only works with matrices and arrays. As you know, we usually read our data into a data frame. Let's put the same data in a data frame.
+
+```{r}
+
+my_df <- data.frame(y1 = c(14, 19, 8, 11),
+                    y2 = c(21, 31, 27, 26),
+                    y3 = c(8, 27, 28, 48),
+                    y4 = c(11, 26, 30, 51))
+
+my_df
+
+```
+
+We can now see our four variables and we want to apply our function to all 
+four. We cannot use apply, because this is a data frame, but we can use lapply!
+The "l" in lapply stands for "list." This function will work with any list.
+A data frame, of course, is just a special list with equal-length vectors,
+so we can use lapply. We could also use lapply with a list (of course!).
+
+```{r}
+
+lapply(my_df, mean_med_sqr)
+
+```
+
+We got what we wanted without a loop! Our one concern might be that the output 
+is also in a list. We probably would prefer a vector. This is where sapply 
+comes to the rescue! It does the same job as lapply, but returns the results
+in a more simple vector. (Maybe it is named sapply because it is "simple" 
+apply.)
+
+```{r}
+
+sapply(my_df, mean_med_sqr)
+
+```
+
+Finally, consider the hsb2 data.
+
+```{r}
+
+hsb2 <- read_csv(here("Data", "hsb2.csv"))
+
+```
+
+What if we wanted to use our function on math scores by SES? We could separate 
+out the three different levels of SES into three data sets, then look at the 
+square of the mean and median difference of math scores in all three data sets. Suppose, however, we had a different categorical variable that had 20  categories. That would be a pain! Then we might be tempted to use a for loop 
+to separate out the different categories and another for loop to go through 
+each of the 20 data sets to calculate this statistic. That would probably be 
+easier than separating all 20 data sets and then doing the mean for all 20 data sets by hand. This is easier yet!
+
+```{r}
+
+tapply(hsb2$math, hsb2$ses, FUN = mean_med_sqr)
+
+```
+
+The tapply function vectorizes our function not only for the variable of 
+interest (math), but also for the grouping variable (ses). Two vectorizations 
+for the price of one!
+
+So these are the methods of asking for a vectorization in Base R and thus 
+avoiding loops: apply, lapply, sapply, and tapply.
