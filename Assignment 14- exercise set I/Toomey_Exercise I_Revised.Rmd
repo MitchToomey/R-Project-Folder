@@ -90,19 +90,15 @@ hsb2 %>%
 (20 points)
 ```{r}
 
-# vector of scores
+trim_means <- function(y, trims) {
+    trims <- as.list(trims)
+    trimmed_means <- map_dbl(trims, function(trim) mean(y, trim = trim))
+    return(trimmed_means)
+} 
 
-# vector of trim arguments
+the_trims <- c(0, 0.05, 0.1, 0.15, 0.20)
 
-# return a vector of trimmed means
-  # one mean for each argument
-
-# use a map function - map double cus only one argument
-
-hsb2 %>%
-  select(read:socst) %>%
-  map_dbl(mean)
-
+trim_means(hsb2$read, the_trims)
 
 ```
 
@@ -110,7 +106,9 @@ hsb2 %>%
 (20 points)
 ```{r}
 
-
+hsb2 %>%
+  select(read:socst) %>%
+  map(trim_means, the_trims)
 
 ```
 
