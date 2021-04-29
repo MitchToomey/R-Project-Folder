@@ -1,0 +1,14 @@
+Mitchell Toomey EDRM 718 GitHub Repo
+
+This is a very well designed repo with a folder for data files, notebooks, and
+instructor notes. The only change needed is to put all non-essential and
+non-text files into your .gitignore. I recommend adding these lines:
+
+*.html
+*.Rhistory
+*.DS_Store
+*.RData
+
+Nice work!
+
+45/50
