@@ -1,0 +1,242 @@
+---
+title: "Exercise set H"
+author: "Mitchell Toomey"
+date: "April 11, 2021"
+output: html_notebook
+---
+
+```{r}
+library(here)
+library(tidyverse)
+library(dplyr)
+library(hrbrthemes)
+
+```
+
+### 1
+Use the NYC flights data to construct a graph that compares carriers 
+in terms of the proportion of 2013 flights that arrived on time when traveling 
+from New York City to Atlanta. Your graph should include a title 
+and easy-to-read labels, including the names of airlines rather than airline 
+codes. You can find airline names in the Airlines Data, so you should draw 
+from these data to include the names. (You completed this graph in the 
+previous exercise set, but this time you should avoid 
+entering airline names manually.)
+
+```{r}
+
+airlines <- read_csv(here("Data", "Airlines Data.csv"))
+
+nyc_flights <- read_csv(here("Data", "NYC Flights 2013.csv"))
+
+# Joining carriers from carrier data to flights data and renaming
+
+flights_2 <- nyc_flights %>%
+  left_join(airlines, by = "carrier")
+
+# made a stacked proportional bar plot
+
+flights_2 %>%
+  group_by(name) %>%
+  mutate(on_off_time = (arr_delay >= 0) == TRUE | (arr_delay < 0) == FALSE) %>%
+  filter(dest == "ATL", !is.na(on_off_time)) %>% 
+  ggplot(aes(x=name)) + 
+  geom_bar(aes(fill=on_off_time), position = "fill") +
+  theme(axis.text.x = element_text(angle = 90, hjust = 1)) +
+  labs(x="Airlines", y="Proportion Arrived on Time to Atlanta", 
+                fill="on time?")
+
+# not sure how to remove NA's here
+```
+
+### 2
+Construct a graph that shows how many flights each carrier had to 
+Atlanta in 2013. Only include carriers that had flights to Atlanta 
+but include all such carriers. For airlines with 500 or fewer flights
+to Atlanta in the year, combine them into an “other” category on your graph.
+
+```{r}
+
+flights_2 %>%
+  group_by(carrier) %>%
+  filter(dest %in% c("ATL")) %>%
+  summarize(freq = n()) %>%
+  mutate(carrier = fct_collapse(carrier, 
+                                other = c("9E", "UA", "WN"))) %>%
+  ggplot(aes(x= carrier, y = freq)) +
+  geom_col(fill = "navy")+
+  scale_x_discrete(drop = FALSE) +
+  labs(title = "Carriers from NYC to ATL",
+       subtitle = "Flight Data from 2013",
+       x = "Airline Carrier",
+       y = "Frequency") 
+
+```
+
+### 3
+Create a tibble, UA, that only contains United Airlines flights. 
+Create another tibble, AA, that only contains American Airlines flights. 
+Use these tibbles and the Airports Data to determine what destinations 
+United Airlines flies to from NYC that American Airlines does not, 
+and vice versa.
+
+```{r}
+
+UA <- as_tibble(flights_2) %>%
+  group_by(name) %>%
+  filter(name %in% c("United Air Lines Inc."))
+
+
+AA <- as_tibble(flights_2) %>%
+  group_by(name) %>%
+  filter(name %in% c ("American Airlines Inc."))
+
+airports <- read_csv(here("Data", "Airports Data.csv"))
+
+UA_joined<- UA %>%
+  left_join(airports, c ("dest" = "faa")) 
+
+
+AA_joined<- AA %>%
+  left_join(airports, c("dest" = "faa"))
+
+UA.only<- setdiff(UA_joined, AA_joined)
+UA.only
+
+AA.only<- setdiff(AA_joined, UA_joined)
+AA.only
+
+```
+
+### 4
+Import the Small Cities Health Data into a tibble named “health”. Construct a 
+scatterplot to illustrate the relationship of the number of 
+physicians (response variable) and the number of hospital beds
+(explanatory variable).
+
+```{r}
+
+health <- read_csv(here("Data", "Small Cities Health Data.csv"))
+health <- as_tibble(health)
+
+ggplot(health, aes(x=hosp.beds, y=doctors)) + 
+    geom_point() +
+    labs(x="Number of Hospital Beds", y="Number of Doctors")
+
+```
+
+### 5
+Construct a scatterplot for the same two variables, but this time only using 
+cities with less than 1,000 hospital beds. Put a regression line in the plot.
+
+```{r}
+# health data set with less than 1000 hospital beds
+
+health_2 <- filter(health, hosp.beds < 1000)
+
+ggplot(health_2, aes(x=hosp.beds, y=doctors)) + 
+    geom_point() +
+    geom_smooth(method=lm , color="red", se=FALSE) + 
+    labs(title = "Relationship of Physician Numbers to Number of Hospital Beds",
+       subtitle = "Small Cities in America Data",
+       x = "Number of Hospital Beds",
+       y = "Number of Physicians")
+
+```
+
+### 6
+The Small Cities Densities file contains population density data for the same small cities. Add the
+density variable to the health tibble
+
+```{r}
+
+small_city_density <- read_csv(here("Data", "Small Cities Densities.csv"))
+
+check_density <- small_city_density %>%
+  count(density)
+
+check_density %>%
+  filter(n > 1)
+
+# I see that 7 rows have more than 1 n, so we need to figure out how to make 
+# them a primary key
+
+# see if they are accidental duplicates
+
+small_city_density %>%
+  filter((density == 57 | density == 80 | density == 86 |
+            density == 95 | density == 106 | density == 108))
+
+# no duplicate city codes, so just diff cities with same density
+
+check_density <- small_city_density %>%
+  count(city.code, density)
+
+check_density %>%
+  filter(n > 1)
+
+small_city_density
+
+# I didn't even realize city code was a primary key! But oh well, it got joined.
+
+health <- health %>%
+  left_join(small_city_density)
+
+```
+
+### 7
+Add a categorical density variable to the health tibble with levels “Low” (density up to 80), “Middle”
+(density from 80 to 120), and “High” (density above 120). Construct a bar graph to illustrate how
+many cities there are at each density level.
+
+```{r}
+health$density_levels <- health$density
+
+health$density_levels[health$density<=79] <- "Low"
+health$density_levels[health$density>=80 & health$density<=120 ] <- "Middle"
+health$density_levels[health$density>=121] <- "High"
+
+health$density_levels <- as_factor(health$density_levels)
+
+health %>%
+  mutate(density_levels = fct_relevel(density_levels, "Low", "Middle", "High")) %>%
+    ggplot(aes(x=density_levels)) + 
+      geom_bar() +
+      scale_fill_manual(values = c("red", "green", "blue")) +
+      theme(legend.position="none") +
+      labs(x="Density Levels", y="Number of Cities")
+
+```
+
+### 8
+Construct the same bar graph you constructed in the previous exercise but reverse the order of the bars in the bar graph
+
+```{r}
+
+nyc_flights %>%
+  group_by(carrier) %>%
+  filter(dest == "ATL") %>% 
+  mutate(on_off_time = (arr_delay >= 0) == TRUE | (arr_delay < 0) == FALSE) %>%
+  mutate(company = recode(carrier, 
+       "9E" = "Endeavor Air Inc.",
+       "DL" = "Delta Air Lines Inc.",
+       "EV" = "ExpressJet Airlines Inc.",
+       "FL" = "AirTrain Airways Corporation",
+       "MQ" = "Envoy Air",
+       "UA" = "United Air Lines Inc.",
+       "WN" = "Southwest Airlines Co.")) %>% 
+  ggplot(aes(x=fct_rev(company), fill=on_off_time)) + 
+  geom_bar(position = "fill") +
+  theme(axis.text.x = element_text(angle = 90, hjust = 1)) +
+  labs(x="Airlines", y="Proportion Arrived on Time to Atlanta", 
+                fill="on time?")
+ 
+
+```
+
+***
+
+**Nice work!**
+
+**100/100**
+

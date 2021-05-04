@@ -1,0 +1,120 @@
+---
+title: "Exercise Set I"
+author: "Mitchell Toomey"
+output: html_notebook
+---
+
+```{r}
+library(here)
+library(tidyverse)
+library(dplyr)
+library(hrbrthemes)
+```
+
+1. Read the Patient Data CSV file into a tibble named “patients”. Remove the word “Patient” from each
+patient so that the patient is represented by a letter. Tidy the patient tibble.
+```{r}
+patients <- read_csv(here("Data", "Patient Data.csv"))
+
+patients <- as_tibble(patients)
+
+patients <- patients %>%
+    mutate(patient = str_remove_all(patient, "Patient"))
+
+patients <- patients %>%
+  gather("reading.1", "reading.2", "reading.3",
+         key = "reading number",
+         value = "reading score")
+
+patients
+
+```
+
+2. Here is a regular expression that Mike wrote to catch most problems with email addresses:
+^[[:alnum:]._-]+@[[:alnum:].-]+\\.[[:alpha:]]{2,}$
+Use this expression to find the five problem email addresses in the Williams Study Data.
+```{r}
+
+williams <- read_csv(here("Data", "Williams Study Data.csv"))
+
+str_view(williams$`Email Address`, 
+                                 "^[[:alnum:]._-]+@[[:alnum:].-]+\\.[[:alpha:]]{2,}$", 
+                                 match = FALSE)
+
+```
+
+
+3. Write each of the incorrect email addresses. For each address, explain what appears to be incorrect about the address and identify the specific portion of the regular expression that caught the error. (20 points)
+```{r}
+
+incorrect_1 <- "The first incorrect email is \"kalpol@aol.c\". This is incorrect because it should be \".com\"."
+incorrect_2 <- "The second incorrect email is \"kiddailey@live.com.\". This is incorrect because there is an extra period after \"com\"."
+incorrect_3 <- "The third incorrect email is \"bcevcmsn.com\". This is incorrect because there is there is no no \"@\" before \".com\"."
+incorrect_4 <- "The fourth incorrect email is \"dpriceatt.net\". This is incorrect because there is there is no \"@\" before \".com\"."
+incorrect_5 <- "The fifth incorrect email is \"sarah@s@aol.com\". This is incorrect because there is there is an extra \"@\" after sarah."
+
+writeLines(c(incorrect_1, incorrect_2, incorrect_3, incorrect_4, incorrect_5))
+
+# I need to go back and look for what in the reg expr caught these errors
+
+```
+
+4. Identify the line number in the file and the identification number of the participant for each incorrect
+address so that Ms. Williams will be able to locate the errors and correct them.
+```{r}
+
+str_which(williams$`Email Address`, "^[[:alnum:]._-]+@[[:alnum:].-]+\\.[[:alpha:]]{2,}$", negate = TRUE)
+
+```
+
+5. The identification numbers are not only unique for each participant in the study, but they are coded so that the first digit represents a school district, and the next two digits represent a school in that district where the participant attends school. Ms. Williams needs the line number of all identification numbers that begin with “552”. Write a regular expression to find these lines and write the script needed to identify the line numbers. (Hint: Be sure that the identification number has a character class before you begin looking for these students.)
+(20 points)
+```{r}
+
+str_which(williams$`Identification Number`, "^552")
+
+```
+
+6. Use a single set of piped functions to select all the score variables in the HSB2 Data and to use a member of the apply family to calculate the mean for all the variables without a loop.
+```{r}
+
+hsb2 <- read_csv(here("Data", "hsb2.csv"))
+
+hsb2 %>%
+  select(read, write, math, science, socst) %>%
+  sapply(mean)
+
+```
+
+7. Write a short function that you can send a vector of scores and a vector of trim arguments that will return a vector of trimmed means, with one mean for each trim argument. Use one of the map functions to avoid a loop. Test your function with the HSB2 reading scores by trimming 0%, 5%, 10%, 15%, and 20% of the scores when calculating the mean.
+(20 points)
+```{r}
+
+trim_means <- function(y, trims) {
+    trims <- as.list(trims)
+    trimmed_means <- map_dbl(trims, function(trim) mean(y, trim = trim))
+    return(trimmed_means)
+} 
+
+the_trims <- c(0, 0.05, 0.1, 0.15, 0.20)
+
+trim_means(hsb2$read, the_trims)
+
+```
+
+8. Use a single set of piped functions, your trim function, and one of the map functions to select all the score variables in the HSB2 Data and then calculate trimmed means by trimming 0%, 5%, 10%, 15%, and 20% of the scores for each variable without using a loop.
+(20 points)
+```{r}
+
+hsb2 %>%
+  select(read:socst) %>%
+  map(trim_means, the_trims)
+
+```
+
+***
+
+**Excellent work!**
+
+**120/120**
+
